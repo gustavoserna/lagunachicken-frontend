@@ -34,6 +34,7 @@ export class BotoneraComponent {
     this.items = [
       { label: 'Dashboard', icon: 'pi pi-chart-pie', routerLink: ['/inicio'] },
       { label: 'Choferes', icon: 'pi pi-users', routerLink: ['/choferes'] },
+      { label: 'Servicios', icon: 'pi pi-wrench', routerLink: ['/servicios'] },
       { label: 'Vehículos', icon: 'pi pi-car', routerLink: ['/vehiculos'] },
       { label: 'Cerrar sesión', icon: 'pi pi-power-off', command: () => this.logout() },
     ];

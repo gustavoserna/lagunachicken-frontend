@@ -60,6 +60,7 @@ export class VehiculosComponent {
       (data: any) => {
         // success
         this.addVehiculoSidebarVisible = false;
+        this.saveVehiculoModel = new Vehiculo;
         this.getVehiculos();
       },
       (error: any) => {

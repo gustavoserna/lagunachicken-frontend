@@ -34,6 +34,7 @@ export class ChoferesComponent {
       (data: any) => {
         // success
         this.addChoferSidebarVisible = false;
+        this.saveChoferModel = new Chofer;
         this.getChoferes();
       },
       (error: any) => {

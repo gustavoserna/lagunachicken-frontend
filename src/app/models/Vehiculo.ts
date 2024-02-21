@@ -5,8 +5,8 @@ export class Vehiculo {
     idVehiculo: number = 0;
     sucursalDTO: Sucursal = new Sucursal;
     choferDTO: Chofer = new Chofer;
-    numEconomico: string = "";
-    kilometraje: number = 0;
+    numEconomico: string = ""; //
+    kilometraje: number = 0; //
     placas: string = "";
     estadoPlacas: string = "";
     modelo: string = "";

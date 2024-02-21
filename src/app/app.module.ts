@@ -19,6 +19,9 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { PanelMenuModule } from 'primeng/panelmenu';
+
 
 
 import { InicioComponent } from './components/inicio/inicio.component';
@@ -31,7 +34,7 @@ import { ChoferesComponent } from './components/choferes/choferes.component';
 import { BotoneraComponent } from './components/botonera/botonera.component';
 import { VehiculosComponent } from './components/vehiculos/vehiculos/vehiculos.component';
 import { AccordionModule } from 'primeng/accordion';
-
+import { ServiciosComponent } from './components/servicios/servicios.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,8 @@ import { AccordionModule } from 'primeng/accordion';
     ProfileComponent,
     ChoferesComponent,
     BotoneraComponent,
-    VehiculosComponent
+    VehiculosComponent,
+    ServiciosComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +66,9 @@ import { AccordionModule } from 'primeng/accordion';
     InputTextModule,
     AccordionModule,
     DropdownModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    TieredMenuModule,
+    PanelMenuModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

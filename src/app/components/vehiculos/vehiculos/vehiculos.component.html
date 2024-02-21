@@ -1,0 +1,221 @@
+<app-botonera></app-botonera>
+
+<p-panel styleClass="main-panel">
+    <p-button label="Agregar vehículo" [rounded]="true" [raised]="true" severity="secondary"
+        (click)="addVehiculoSidebarVisible=true"></p-button><br><br>
+
+    <p-table [value]="vehiculos" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+                <th style="width: 4rem"></th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns">
+                    <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                    <ng-template #nested_object_content>
+                        {{rowData[col.field][col.subfield]}}
+                    </ng-template>
+                    <ng-template #normal_content>
+                        {{rowData[col.field]}}
+                    </ng-template>
+                </td>
+                <td style="text-align: center">
+                    <button pButton type="button" class="p-button-secondary" icon="pi pi-external-link"
+                        (click)="openPopupVehiculo(rowData)"></button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-table>
+
+    <!-- vehiculo info dialog -->
+    <p-dialog header="Información del Vehículo" [(visible)]="vehiculoDialogVisible" [modal]="true"
+        [style]="{width: '60vw'}">
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="50%">
+                <h3>Unidad</h3>
+                <span><b>Chofer</b></span><br>
+                <span>{{selectedVehiculo.choferDTO.nombre}}</span><br>
+
+                <span><b>Sucursal</b></span><br>
+                <span>{{selectedVehiculo.sucursalDTO.sucursal}}</span><br>
+
+                <span><b>Número económico</b></span><br>
+                <span>{{selectedVehiculo.numEconomico}}</span><br>
+
+                <h3>Legal</h3>
+                <span><b>Placas</b></span><br>
+                <span>{{selectedVehiculo.placas}}</span><br>
+
+                <span><b>Estado placas</b></span><br>
+                <span>{{selectedVehiculo.estadoPlacas}}</span><br>
+
+                <span><b>Aseguradora</b></span><br>
+                <span>{{selectedVehiculo.aseguradora}}</span><br>
+
+                <span><b>Número de Póliza</b></span><br>
+                <span>{{selectedVehiculo.numeroPoliza}}</span><br>
+
+                <span><b>Vencimiento de la Póliza</b></span><br>
+                <span>{{selectedVehiculo.vencimientoPoliza}}</span><br>
+            </div>
+            
+            <div fxFlex="50%">
+                <h3>Datos Generales</h3>
+                <span><b>Modelo</b></span><br>
+                <span>{{selectedVehiculo.modelo}}</span><br>
+
+                <span><b>Marca</b></span><br>
+                <span>{{selectedVehiculo.marca}}</span><br>
+
+                <span><b>Tipo</b></span><br>
+                <span>{{selectedVehiculo.tipo}}</span><br>
+
+                <span><b>Capacidad</b></span><br>
+                <span>{{selectedVehiculo.capacidad}}</span><br>
+
+                <span><b>Número de serie</b></span><br>
+                <span>{{selectedVehiculo.numeroSerie}}</span><br>
+
+                <span><b>Número de motor</b></span><br>
+                <span>{{selectedVehiculo.numeroMotor}}</span><br>
+
+                <span><b>Kilometraje</b></span><br>
+                <span>{{selectedVehiculo.kilometraje}}</span><br>
+
+                <span><b>Descripción</b></span><br>
+                <span>{{selectedVehiculo.descripcion}}</span>
+            </div>
+          </div>
+    </p-dialog>
+
+    <!-- add vehiculo panel -->
+    <p-sidebar [(visible)]="addVehiculoSidebarVisible" position="right">
+        <ng-template pTemplate="header">Agregar vehículo</ng-template>
+        <ng-template pTemplate="content">
+            <form class="form-container" (ngSubmit)="saveVehiculo()">
+                <p-accordion [activeIndex]="0">
+
+                    <p-accordionTab header="Unidad"><br>
+                        <p-dropdown [options]="choferes" [(ngModel)]="selectedChofer"
+                            [ngModelOptions]="{standalone: true}" optionLabel="nombre" [filter]="true" filterBy="nombre"
+                            [showClear]="false" placeholder="Seleccionar un chofer" autoWidth="false"
+                            [style]="{'width':'100%'}">
+                        </p-dropdown><br><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="numEconomico" name="numEconomico"
+                                [(ngModel)]="saveVehiculoModel.numEconomico" class="full-width" />
+                            <label for="numEconomico">Número económico</label>
+                        </span><br>
+
+                        <p-dropdown [options]="sucursales" [(ngModel)]="selectedSucursal"
+                            [ngModelOptions]="{standalone: true}" optionLabel="sucursal" [filter]="true"
+                            filterBy="sucursal" [showClear]="false" placeholder="Seleccionar una sucursal"
+                            autoWidth="false" [style]="{'width':'100%'}">
+                        </p-dropdown><br>
+                    </p-accordionTab>
+
+                    <p-accordionTab header="Datos Generales"><br>
+                        <span class="p-float-label">
+                            <input pInputText id="modelo" name="modelo" [(ngModel)]="saveVehiculoModel.modelo"
+                                class="full-width" />
+                            <label for="modelo">Modelo</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="marca" name="marca" [(ngModel)]="saveVehiculoModel.marca"
+                                class="full-width" />
+                            <label for="marca">Marca</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="tipo" name="tipo" [(ngModel)]="saveVehiculoModel.tipo"
+                                class="full-width" />
+                            <label for="tipo">Tipo</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="capacidad" name="capacidad" [(ngModel)]="saveVehiculoModel.capacidad"
+                                class="full-width" />
+                            <label for="capacidad">Capacidad</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="numSerie" name="numSerie" [(ngModel)]="saveVehiculoModel.numeroSerie"
+                                class="full-width" />
+                            <label for="numSerie">Número de serie</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="numMotor" name="numMotor" [(ngModel)]="saveVehiculoModel.numeroMotor"
+                                class="full-width" />
+                            <label for="numMotor">Número de motor</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="kilometraje" name="kilometraje"
+                                [(ngModel)]="saveVehiculoModel.kilometraje" class="full-width" />
+                            <label for="kilometraje">Kilometraje</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="descripcion" name="descripcion"
+                                [(ngModel)]="saveVehiculoModel.descripcion" class="full-width" />
+                            <label for="descripcion">Descripción</label>
+                        </span><br>
+                    </p-accordionTab>
+
+                    <p-accordionTab header="Legal"><br>
+                        <span class="p-float-label">
+                            <input pInputText id="placas" name="placas" [(ngModel)]="saveVehiculoModel.placas"
+                                class="full-width" />
+                            <label for="placas">Placas</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="estadoPlacas" name="estadoPlacas"
+                                [(ngModel)]="saveVehiculoModel.estadoPlacas" class="full-width" />
+                            <label for="estadoPlacas">Estado placas</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="aseguradora" name="aseguradora"
+                                [(ngModel)]="saveVehiculoModel.aseguradora" class="full-width" />
+                            <label for="aseguradora">Aseguradora</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="numeroPoliza" name="numeroPoliza"
+                                [(ngModel)]="saveVehiculoModel.numeroPoliza" class="full-width" />
+                            <label for="numeroPoliza">Número de Póliza</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="vencimientoPoliza" name="vencimientoPoliza"
+                                [(ngModel)]="saveVehiculoModel.vencimientoPoliza" class="full-width" />
+                            <label for="vencimientoPoliza">Vencimiento de la Póliza</label>
+                        </span><br>
+                    </p-accordionTab>
+                </p-accordion><br>
+
+                <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned"
+                    type="submit"></p-button><br>
+            </form>
+        </ng-template>
+    </p-sidebar>
+</p-panel>

@@ -1,0 +1,7 @@
+<p-sidebar [(visible)]="sidebarVisible" [baseZIndex]="10000" [showCloseIcon]="false" [dismissible]="false"
+    [modal]="false">
+    <ng-template pTemplate="header">Laguna Chicken</ng-template>
+    <ng-template pTemplate="content">
+        <p-menu [model]="items"></p-menu>
+    </ng-template>
+</p-sidebar>

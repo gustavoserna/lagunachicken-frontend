@@ -1,0 +1,78 @@
+<app-botonera></app-botonera>
+
+<p-panel styleClass="main-panel">
+    <p-button label="Agregar chofer" [rounded]="true" [raised]="true" severity="secondary" (click)="addChoferSidebarVisible=true"></p-button><br><br>
+
+    <p-table [value]="choferes" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+        [rowsPerPageOptions]="[10,25,50]">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns">
+                    <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                    <ng-template #nested_object_content>
+                        {{rowData[col.field][col.subfield]}}
+                    </ng-template>
+                    <ng-template #normal_content>
+                        {{rowData[col.field]}}
+                    </ng-template>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-table>
+
+    <!-- add chofer panel -->
+    <p-sidebar [(visible)]="addChoferSidebarVisible" position="right">
+        <ng-template pTemplate="header">Agregar chofer</ng-template>
+        <ng-template pTemplate="content">
+            <form class="form-container" (ngSubmit)="saveChofer()"><br><br>
+                <span class="p-float-label">
+                    <input pInputText id="nombre" name="nombre" [(ngModel)]="saveChoferModel.nombre" class="full-width" />
+                    <label for="nombre">Nombre del chofer</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <input pInputText id="fechaNacimiento" name="fechaNacimiento" [(ngModel)]="saveChoferModel.fechaNacimiento" class="full-width" />
+                    <label for="fechaNacimiento">Fecha de nacimiento</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <input pInputText id="direccion" name="direccion" [(ngModel)]="saveChoferModel.direccion" class="full-width" />
+                    <label for="direccion">Dirección</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <input pInputText id="nss" name="nss" [(ngModel)]="saveChoferModel.nss" class="full-width" />
+                    <label for="nss">Número de seguro social</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <input pInputText id="vencimientoLicencia" name="vencimientoLicencia" [(ngModel)]="saveChoferModel.vencimientoLicencia" class="full-width" />
+                    <label for="vencimientoLicencia">Vencimiento de licencia</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <input pInputText id="tipoSangre" name="tipoSangre" [(ngModel)]="saveChoferModel.tipoSangre" class="full-width" />
+                    <label for="tipoSangre">Tipo de sangre</label>
+                </span><br>
+
+                <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned" type="submit"></p-button>
+            </form>
+        </ng-template>
+    </p-sidebar>
+</p-panel>

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { Sucursal } from '../../models/Sucursal';
 import { Servicio } from '../../models/Servicio';
+import { Proveedor } from '../../models/Proveedor';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,23 @@ export class UtilityService {
   public async getServicios(): Promise<Servicio[]> {
     try {
       const data = await this.http.get<Servicio[]>(this.appControllerUrl + "servicio/findAll", { headers: { "Content-Type": "application/json" } }).toPromise();
+      if (data !== undefined) {
+        return data;
+      } else {
+        throw new Error("Data is undefined");
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public saveProveedor(proveedor: Proveedor) {
+    return this.http.post<Proveedor>(this.appControllerUrl + "proveedor", proveedor, { headers: { "Content-Type": "application/json" } });
+  }
+
+  public async getProveedores(): Promise<Proveedor[]> {
+    try {
+      const data = await this.http.get<Proveedor[]>(this.appControllerUrl + "proveedor/findAll", { headers: { "Content-Type": "application/json" } }).toPromise();
       if (data !== undefined) {
         return data;
       } else {

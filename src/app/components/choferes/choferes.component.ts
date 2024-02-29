@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Chofer } from '../../models/Chofer';
 import { ChoferService } from '../../services/chofer/chofer.service';
+import { Sangre } from '../../models/Sangre';
 
 @Component({
   selector: 'app-choferes',
@@ -10,6 +11,7 @@ import { ChoferService } from '../../services/chofer/chofer.service';
 export class ChoferesComponent {
 
   choferes: Chofer[] = [];
+  sangres: string[] = ['AB+', 'AB-', 'O+', 'O-'];
   cols: any[] = [
     { field: 'nombre', header: 'Nombre', type: 'string' },
     { field: 'fechaNacimiento', header: 'Fecha de nacimiento', type: 'string' },

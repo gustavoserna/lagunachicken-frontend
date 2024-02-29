@@ -8,6 +8,7 @@ import { ChoferService } from './services/chofer/chofer.service';
 import { ChoferesComponent } from './components/choferes/choferes.component';
 import { VehiculosComponent } from './components/vehiculos/vehiculos/vehiculos.component';
 import { ServiciosComponent } from './components/servicios/servicios.component';
+import { ServiciosVehiculoComponent } from './components/servicios-vehiculo/servicios-vehiculo.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: InicioComponent, data: {animation: 'isRight'}},
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'choferes', component: ChoferesComponent, data: { title: 'Choferes' } },
   { path: 'vehiculos', component: VehiculosComponent, data: { title: 'Vehículos' } },
   { path: 'servicios', component: ServiciosComponent, data: { title: 'Servicios' } },
+  { path: 'registro-servicios', component: ServiciosVehiculoComponent, data: { title: 'Registro' } },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
 ];
 

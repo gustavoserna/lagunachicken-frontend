@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { Vehiculo } from '../../models/Vehiculo';
+import { VehiculoServicio } from '../../models/VehiculoServicio';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,10 @@ export class VehiculoService {
     } catch (error) {
       throw error;
     }
+  }
+
+  public saveVehiculoServicio(vehiculoServicio: VehiculoServicio) {
+    return this.http.post<Vehiculo>(this.appControllerUrl + "vehiculo/servicio", vehiculoServicio, { headers: { "Content-Type": "application/json" } });
   }
 
 }

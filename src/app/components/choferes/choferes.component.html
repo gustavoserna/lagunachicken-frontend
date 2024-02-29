@@ -47,7 +47,7 @@
                 </span><br>
 
                 <span class="p-float-label">
-                    <input pInputText id="fechaNacimiento" name="fechaNacimiento" [(ngModel)]="saveChoferModel.fechaNacimiento" class="full-width" />
+                    <p-calendar id="fechaNacimiento" name="fechaNacimiento" [(ngModel)]="saveChoferModel.fechaNacimiento" class="full-width"></p-calendar>
                     <label for="fechaNacimiento">Fecha de nacimiento</label>
                 </span><br>
 
@@ -62,12 +62,12 @@
                 </span><br>
 
                 <span class="p-float-label">
-                    <input pInputText id="vencimientoLicencia" name="vencimientoLicencia" [(ngModel)]="saveChoferModel.vencimientoLicencia" class="full-width" />
+                    <p-calendar id="vencimientoLicencia" name="vencimientoLicencia" [(ngModel)]="saveChoferModel.vencimientoLicencia" class="full-width"></p-calendar>
                     <label for="vencimientoLicencia">Vencimiento de licencia</label>
                 </span><br>
 
                 <span class="p-float-label">
-                    <input pInputText id="tipoSangre" name="tipoSangre" [(ngModel)]="saveChoferModel.tipoSangre" class="full-width" />
+                    <p-dropdown [options]="sangres" id="tipoSangre" name="tipoSangre" [(ngModel)]="saveChoferModel.tipoSangre" class="full-width"  placeholder="Selecciona un tipo de sangre"></p-dropdown>
                     <label for="tipoSangre">Tipo de sangre</label>
                 </span><br>
 

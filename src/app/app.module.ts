@@ -22,6 +22,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { PanelMenuModule } from 'primeng/panelmenu';
 
+import { CalendarModule } from 'primeng/calendar';
 
 
 import { InicioComponent } from './components/inicio/inicio.component';
@@ -35,6 +36,7 @@ import { BotoneraComponent } from './components/botonera/botonera.component';
 import { VehiculosComponent } from './components/vehiculos/vehiculos/vehiculos.component';
 import { AccordionModule } from 'primeng/accordion';
 import { ServiciosComponent } from './components/servicios/servicios.component';
+import { ServiciosVehiculoComponent } from './components/servicios-vehiculo/servicios-vehiculo.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,8 @@ import { ServiciosComponent } from './components/servicios/servicios.component';
     ChoferesComponent,
     BotoneraComponent,
     VehiculosComponent,
-    ServiciosComponent
+    ServiciosComponent,
+    ServiciosVehiculoComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +71,8 @@ import { ServiciosComponent } from './components/servicios/servicios.component';
     DropdownModule,
     FlexLayoutModule,
     TieredMenuModule,
-    PanelMenuModule
+    PanelMenuModule,
+    CalendarModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

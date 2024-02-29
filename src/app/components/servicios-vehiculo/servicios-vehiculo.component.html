@@ -1,0 +1,94 @@
+<app-botonera></app-botonera>
+
+<p-panel styleClass="main-panel">
+    <p-button label="Registrar servicio" [rounded]="true" [raised]="true" severity="secondary"
+        (click)="addServicioSidebarVisible=true"></p-button><br><br>
+
+    <p-table [value]="servicios" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns">
+                    <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                    <ng-template #nested_object_content>
+                        {{rowData[col.field][col.subfield]}}
+                    </ng-template>
+                    <ng-template #normal_content>
+                        {{rowData[col.field]}}
+                    </ng-template>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-table>
+
+    <!-- add servicio panel -->
+    <p-sidebar [(visible)]="addServicioSidebarVisible" position="right">
+        <ng-template pTemplate="header">Registrar servicio</ng-template>
+        <ng-template pTemplate="content">
+            <form class="form-container" (ngSubmit)="saveServicio()">
+                <p-dropdown [options]="vehiculos" [(ngModel)]="saveServicioModel.vehiculoDTO" [ngModelOptions]="{standalone: true}"
+                    optionLabel="numEconomico" [filter]="true" filterBy="numEconomico" [showClear]="false"
+                    placeholder="Seleccionar un vehículo" autoWidth="false" [style]="{'width':'100%'}">
+                </p-dropdown><br>
+
+                <p-dropdown [options]="tiposServicio" [(ngModel)]="saveServicioModel.servicioDTO" [ngModelOptions]="{standalone: true}"
+                    optionLabel="servicio" [filter]="true" filterBy="servicio" [showClear]="false"
+                    placeholder="Seleccionar un tipo de servicio" autoWidth="false" [style]="{'width':'100%'}">
+                </p-dropdown><br>
+
+                <span class="p-float-label">
+                    <input pInputText id="kilometraje" name="kilometraje"
+                        [(ngModel)]="saveServicioModel.kilometraje" class="full-width" />
+                    <label for="kilometraje">Kilometraje</label>
+                </span><br>
+
+                <p-dropdown [options]="proveedores" [(ngModel)]="saveServicioModel.proveedorDTO" [ngModelOptions]="{standalone: true}"
+                    optionLabel="proveedor" [filter]="true" filterBy="proveedor" [showClear]="false"
+                    placeholder="Seleccionar un proveedor" autoWidth="false" [style]="{'width':'100%'}">
+                </p-dropdown><br>
+
+                <span class="p-float-label">
+                    <input pInputText id="folioFactura" name="folioFactura"
+                        [(ngModel)]="saveServicioModel.folioFactura" class="full-width" />
+                    <label for="folioFactura">Folio de factura</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <input pInputText id="costo" name="costo"
+                        [(ngModel)]="saveServicioModel.costo" class="full-width" />
+                    <label for="costo">Costo del servicio</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <p-calendar id="fechaServicio" name="fechaServicio" [(ngModel)]="saveServicioModel.fechaServicio" class="full-width"></p-calendar>
+                    <label for="fechaServicio">Fecha del servicio</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <input pInputText id="descripcion" name="descripcion"
+                        [(ngModel)]="saveServicioModel.descripcion" class="full-width" />
+                    <label for="descripcion">Datos adicionales</label>
+                </span><br>
+
+                <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned"
+                    type="submit"></p-button>
+            </form>
+        </ng-template>
+    </p-sidebar>
+</p-panel>

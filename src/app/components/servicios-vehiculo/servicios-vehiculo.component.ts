@@ -8,6 +8,7 @@ import { VehiculoService } from '../../services/vehiculo/vehiculo.service';
 import { Vehiculo } from '../../models/Vehiculo';
 import { Servicio } from '../../models/Servicio';
 import { ServicioService } from '../../services/servicio/servicio.service';
+import { Filtro } from '../../models/Filtro';
 
 @Component({
   selector: 'app-servicios-vehiculo',
@@ -61,7 +62,7 @@ export class ServiciosVehiculoComponent {
         // success
         this.addServicioSidebarVisible = false;
         this.saveServicioModel = new VehiculoServicio;
-        //this.getVehiculoServicios();
+        this.getVehiculosServicios();
       },
       (error: any) => {
         //error
@@ -70,7 +71,7 @@ export class ServiciosVehiculoComponent {
   }
 
   private getVehiculosServicios(): void {
-    this.servicioService.getVehiculosServicios().then(data => {
+    this.servicioService.getVehiculosServicios(new Filtro).then(data => {
       this.servicios = data;
     });
   }

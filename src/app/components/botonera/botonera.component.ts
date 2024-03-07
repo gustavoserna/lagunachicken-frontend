@@ -36,11 +36,20 @@ export class BotoneraComponent {
       { label: 'Choferes', icon: 'pi pi-users', routerLink: ['/choferes'] },
       { label: 'Servicios', icon: 'pi pi-wrench', routerLink: ['/servicios'] },
       {
+        label: 'Consumo', 
+        icon: 'pi pi-dollar', 
+        items: [
+          { label: 'Lista de estaciones', routerLink: ['/estaciones']  },
+          { label: 'Lista de productos', routerLink: ['/productos']  },
+          { label: 'Registro de consumo', routerLink: ['/registro-consumo']  }
+        ]
+      },
+      {
         label: 'Vehículos', 
         icon: 'pi pi-truck', 
         items: [
-          { label: 'Lista de vehículos', icon: 'pi pi-list', routerLink: ['/vehiculos']  },
-          { label: 'Registro de servicios', icon: 'pi pi-wrench', routerLink: ['/registro-servicios']  }
+          { label: 'Lista de vehículos'/*, icon: 'pi pi-list'*/, routerLink: ['/vehiculos']  },
+          { label: 'Registro de servicios'/*, icon: 'pi pi-wrench'*/, routerLink: ['/registro-servicios']  }
         ]
       },
       { label: 'Cerrar sesión', icon: 'pi pi-power-off', command: () => this.logout() },

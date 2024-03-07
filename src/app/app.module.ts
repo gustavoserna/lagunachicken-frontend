@@ -21,6 +21,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { PanelMenuModule } from 'primeng/panelmenu';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TabViewModule } from 'primeng/tabview';
+
 
 import { CalendarModule } from 'primeng/calendar';
 
@@ -37,6 +40,10 @@ import { VehiculosComponent } from './components/vehiculos/vehiculos/vehiculos.c
 import { AccordionModule } from 'primeng/accordion';
 import { ServiciosComponent } from './components/servicios/servicios.component';
 import { ServiciosVehiculoComponent } from './components/servicios-vehiculo/servicios-vehiculo.component';
+import { ConsumosComponent } from './components/consumos/consumos.component';
+import { EstacionesComponent } from './components/estaciones/estaciones.component';
+import { ProductosComponent } from './components/productos/productos.component';
+import { RegistroConsumoComponent } from './components/registro-consumo/registro-consumo.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +56,11 @@ import { ServiciosVehiculoComponent } from './components/servicios-vehiculo/serv
     BotoneraComponent,
     VehiculosComponent,
     ServiciosComponent,
-    ServiciosVehiculoComponent
+    ServiciosVehiculoComponent,
+    ConsumosComponent,
+    EstacionesComponent,
+    ProductosComponent,
+    RegistroConsumoComponent
   ],
   imports: [
     BrowserModule,
@@ -72,7 +83,9 @@ import { ServiciosVehiculoComponent } from './components/servicios-vehiculo/serv
     FlexLayoutModule,
     TieredMenuModule,
     PanelMenuModule,
-    CalendarModule
+    CalendarModule,
+    InputNumberModule,
+    TabViewModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

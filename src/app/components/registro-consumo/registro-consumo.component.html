@@ -1,0 +1,103 @@
+<app-botonera></app-botonera>
+
+<p-panel styleClass="main-panel">
+    <p-button label="Registrar consumo" [rounded]="true" [raised]="true" severity="secondary" (click)="addConsumoSidebarVisible=true"></p-button><br><br>
+
+    <p-table [value]="consumos" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns">
+                    <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                    <ng-template #nested_object_content>
+                        {{rowData[col.field][col.subfield]}}
+                    </ng-template>
+                    <ng-template #normal_content>
+                        {{rowData[col.field]}}
+                    </ng-template>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-table>
+
+    <!-- add consumo panel -->
+    <p-sidebar [(visible)]="addConsumoSidebarVisible" position="right">
+        <ng-template pTemplate="header">Registrar consumo</ng-template>
+        <ng-template pTemplate="content">
+            <form class="form-container" (ngSubmit)="saveVehiculoConsumo()">
+                <p-dropdown [options]="vehiculos" [(ngModel)]="saveConsumoModel.vehiculoDTO" [ngModelOptions]="{standalone: true}"
+                    optionLabel="numEconomico" [filter]="true" filterBy="numEconomico" [showClear]="false"
+                    placeholder="Seleccionar un vehículo" autoWidth="false" [style]="{'width':'100%'}">
+                </p-dropdown><br>
+
+                <p-dropdown [options]="estaciones" [(ngModel)]="saveConsumoModel.estacionDTO" [ngModelOptions]="{standalone: true}"
+                    optionLabel="estacion" [filter]="true" filterBy="estacion" [showClear]="false"
+                    placeholder="Seleccionar una estación" autoWidth="false" [style]="{'width':'100%'}">
+                </p-dropdown><br>
+
+                <span class="p-float-label">
+                    <p-calendar id="fechaConsumo" name="fechaConsumo" [(ngModel)]="saveConsumoModel.fechaConsumo" class="full-width"></p-calendar>
+                    <label for="fechaConsumo">Fecha de consumo</label>
+                </span><br>
+
+                <p-dropdown [options]="horas" [(ngModel)]="saveConsumoModel.horaConsumoJson" [ngModelOptions]="{standalone: true}"
+                    optionLabel="horaConsumo" [filter]="true" filterBy="horaConsumo" [showClear]="false"
+                    placeholder="Seleccionar una hora" autoWidth="false" [style]="{'width':'100%'}">
+                </p-dropdown><br>
+
+                <p-dropdown [options]="productos" [(ngModel)]="saveConsumoModel.productoDTO" [ngModelOptions]="{standalone: true}"
+                    optionLabel="producto" [filter]="true" filterBy="producto" [showClear]="false"
+                    placeholder="Seleccionar un producto" autoWidth="false" [style]="{'width':'100%'}">
+                </p-dropdown><br>
+
+                <span class="p-float-label">
+                    <p-inputNumber [minFractionDigits]="2" id="precio" name="precio"
+                        [(ngModel)]="saveConsumoModel.precio" class="full-width" />
+                    <label for="precio">Precio</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <p-inputNumber [minFractionDigits]="2" id="cantidad" name="cantidad"
+                        [(ngModel)]="saveConsumoModel.cantidad" class="full-width" />
+                    <label for="cantidad">Cantidad</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <p-inputNumber [minFractionDigits]="2" id="odometro" name="odometro"
+                        [(ngModel)]="saveConsumoModel.odometro" class="full-width" />
+                    <label for="odometro">Ódometro</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <p-inputNumber [minFractionDigits]="2" id="rendimiento" name="rendimiento"
+                        [(ngModel)]="saveConsumoModel.rendimiento" class="full-width" />
+                    <label for="rendimiento">Rendimiento</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <p-inputNumber [minFractionDigits]="2" id="recorrido" name="recorrido"
+                        [(ngModel)]="saveConsumoModel.recorrido" class="full-width" />
+                    <label for="recorrido">Recorrido</label>
+                </span><br>
+
+                <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned" type="submit"></p-button>
+            </form>
+        </ng-template>
+    </p-sidebar>
+</p-panel>

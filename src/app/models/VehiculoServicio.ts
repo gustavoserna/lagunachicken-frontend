@@ -14,5 +14,17 @@ export class VehiculoServicio {
     folioFactura: string = "";
     costo: string = "";
     fechaServicio: Date | undefined;
+    formattedDate: string | undefined;
     descripcion: string = "";
+
+    getFormattedDate(): string | undefined {
+        if (this.fechaServicio) {
+            return this.fechaServicio.toLocaleDateString('es-MX', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        return undefined;
+    }
 }

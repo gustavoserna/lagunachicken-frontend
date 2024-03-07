@@ -1,1 +1,188 @@
-<p>inicio works!</p>
+<app-botonera></app-botonera>
+
+<p-tabView class="main-panel">
+    <p-tabPanel header="Reporte de servicios">
+        <p-panel header="Reportes">
+            <p-panel header="Filtros">
+                <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
+                    <div fxFlex="50%">
+                        <p-calendar id="filtroFechaDe" name="filtroFechaDe" [(ngModel)]="filtro.fechaDesde"
+                            placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}"></p-calendar>
+
+                        <!--<p-dropdown [options]="choferes" [(ngModel)]="selectedChofer" [ngModelOptions]="{standalone: true}"
+                            optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="false"
+                            placeholder="Filtrar por chofer" autoWidth="false" [style]="{'width':'100%'}">
+                        </p-dropdown>-->
+                        <p-dropdown [options]="vehiculos" [(ngModel)]="selectedVehiculo"
+                            [ngModelOptions]="{standalone: true}" optionLabel="numEconomico" [filter]="true"
+                            filterBy="nombre" [showClear]="false" placeholder="Filtrar por vehículo" autoWidth="false"
+                            [style]="{'width':'100%'}">
+                        </p-dropdown>
+                    </div>
+
+                    <div fxFlex="50%">
+                        <p-calendar id="filtroFechaHasta" name="filtroFechaHasta" [(ngModel)]="filtro.fechaHasta"
+                            placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}">
+                        </p-calendar>
+
+                        <p-dropdown [options]="servicios" [(ngModel)]="selectedServicio"
+                            [ngModelOptions]="{standalone: true}" optionLabel="servicio" [filter]="true"
+                            filterBy="servicio" [showClear]="false" placeholder="Filtrar por Servicio" autoWidth="false"
+                            [style]="{'width':'100%'}">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <p-button label="Aplicar" [outlined]="true" severity="secondary" class="right-aligned" type="button"
+                    (click)="filtrar()"></p-button>
+                <p-button label="Borrar filtros" [outlined]="true" severity="secondary"
+                    class="right-aligned borrar-filtros" type="button" (click)="filtrar(true)"></p-button>
+            </p-panel><br>
+
+            <!-- charts -->
+            <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
+                <div fxFlex="50%">
+                    <!-- chart costos -->
+                    <p-chart type="bar" [data]="costosTable" [options]="options"></p-chart>
+                </div>
+
+                <div fxFlex="50%">
+                    <!-- chart incidencias -->
+                    <p-chart type="bar" [data]="incidenciasTable" [options]="options"></p-chart><br>
+                </div>
+            </div>
+
+            <!-- tabla servicio -->
+            <p-table #serviciosTable [value]="serviciosTabla" [columns]="cols" [paginator]="true" [rows]="10"
+                [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr>
+                        <td *ngFor="let col of columns">
+                            <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                            <ng-template #nested_object_content>
+                                {{rowData[col.field][col.subfield]}}
+                            </ng-template>
+                            <ng-template #normal_content>
+                                {{rowData[col.field]}}
+                            </ng-template>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="paginatorleft">
+                    <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+                </ng-template>
+
+                <ng-template pTemplate="paginatorright">
+                    <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download" (click)="exportToCSV(serviciosTable.columns, serviciosTable.value)"></p-button>
+                </ng-template>
+            </p-table>
+        </p-panel>
+    </p-tabPanel>
+
+    <p-tabPanel header="Reporte de consumos">
+        <p-panel header="Reportes">
+            <p-panel header="Filtros">
+                <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
+                    <div fxFlex="50%">
+                        <p-calendar id="filtroFechaDeConsumo" name="filtroFechaDeConsumo" [(ngModel)]="filtroConsumo.fechaDesde"
+                            placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}"></p-calendar>
+
+                        <!--<p-dropdown [options]="choferes" [(ngModel)]="selectedChofer" [ngModelOptions]="{standalone: true}"
+                            optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="false"
+                            placeholder="Filtrar por chofer" autoWidth="false" [style]="{'width':'100%'}">
+                        </p-dropdown>-->
+                        <p-dropdown [options]="vehiculosConsumo" [(ngModel)]="selectedVehiculoConsumo"
+                            [ngModelOptions]="{standalone: true}" optionLabel="numEconomico" [filter]="true"
+                            filterBy="numEconomico" [showClear]="false" placeholder="Filtrar por vehículo" autoWidth="false"
+                            [style]="{'width':'100%', 'margin-bottom':'10px'}">
+                        </p-dropdown>
+
+                        <p-dropdown [options]="estacionesConsumo" [(ngModel)]="selectedEstacionConsumo"
+                            [ngModelOptions]="{standalone: true}" optionLabel="estacion" [filter]="true"
+                            filterBy="estacion" [showClear]="false" placeholder="Filtrar por Estacion" autoWidth="false"
+                            [style]="{'width':'100%'}">
+                        </p-dropdown>
+                    </div>
+
+                    <div fxFlex="50%">
+                        <p-calendar id="filtroFechaHastaConsumo" name="filtroFechaHastaConsumo" [(ngModel)]="filtroConsumo.fechaHasta"
+                            placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}">
+                        </p-calendar>
+
+                        <p-dropdown [options]="productosConsumo" [(ngModel)]="selectedProductoConsumo"
+                            [ngModelOptions]="{standalone: true}" optionLabel="producto" [filter]="true"
+                            filterBy="producto" [showClear]="false" placeholder="Filtrar por producto" autoWidth="false"
+                            [style]="{'width':'100%'}">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <p-button label="Aplicar" [outlined]="true" severity="secondary" class="right-aligned" type="button"
+                    (click)="filtrarConsumo()"></p-button>
+                <p-button label="Borrar filtros" [outlined]="true" severity="secondary"
+                    class="right-aligned borrar-filtros" type="button" (click)="filtrarConsumo(true)"></p-button>
+            </p-panel><br>
+
+            <!-- charts -->
+            <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
+                <div fxFlex="33%">
+                    <!-- chart costos -->
+                    <p-chart type="bar" [data]="costosConsumoTable" [options]="options"></p-chart>
+                </div>
+
+                <div fxFlex="33%">
+                    <!-- chart incidencias estaciones -->
+                    <p-chart type="bar" [data]="incidenciasConsumoTable" [options]="options" style="padding: 15px;"></p-chart><br>
+                </div>
+
+                <div fxFlex="33%">
+                    <!-- chart incidencias productos -->
+                    <p-chart type="bar" [data]="incidenciasProductoConsumoTable" [options]="options"></p-chart><br>
+                </div>
+            </div>
+
+            <!-- tabla consumo -->
+            <p-table #consumosTable [value]="consumosTabla" [columns]="colsConsumos" [paginator]="true" [rows]="10"
+                [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr>
+                        <td *ngFor="let col of columns">
+                            <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                            <ng-template #nested_object_content>
+                                {{rowData[col.field][col.subfield]}}
+                            </ng-template>
+                            <ng-template #normal_content>
+                                {{rowData[col.field]}}
+                            </ng-template>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="paginatorleft">
+                    <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+                </ng-template>
+
+                <ng-template pTemplate="paginatorright">
+                    <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download" (click)="exportToCSV(consumosTable.columns, consumosTable.value)"></p-button>
+                </ng-template>
+            </p-table>
+        </p-panel>
+    </p-tabPanel>
+</p-tabView>

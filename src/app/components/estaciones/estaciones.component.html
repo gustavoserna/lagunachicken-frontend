@@ -1,0 +1,53 @@
+<app-botonera></app-botonera>
+
+<p-panel styleClass="main-panel">
+    <p-button label="Agregar estacion" [rounded]="true" [raised]="true" severity="secondary" (click)="addEstacionSidebarVisible=true"></p-button><br><br>
+
+    <p-table [value]="estaciones" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+        [rowsPerPageOptions]="[10,25,50]">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns">
+                    <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                    <ng-template #nested_object_content>
+                        {{rowData[col.field][col.subfield]}}
+                    </ng-template>
+                    <ng-template #normal_content>
+                        {{rowData[col.field]}}
+                    </ng-template>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-table>
+
+    <!-- add estacion panel -->
+    <p-sidebar [(visible)]="addEstacionSidebarVisible" position="right">
+        <ng-template pTemplate="header">Agregar estacion</ng-template>
+        <ng-template pTemplate="content">
+            <form class="form-container" (ngSubmit)="saveEstacion()"><br><br>
+                <span class="p-float-label">
+                    <input pInputText id="estacion" name="estacion" [(ngModel)]="saveEstacionModel.estacion" class="full-width" />
+                    <label for="estacion">Nombre de la estación</label>
+                </span><br>
+
+                <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned" type="submit"></p-button>
+            </form>
+        </ng-template>
+    </p-sidebar>
+</p-panel>

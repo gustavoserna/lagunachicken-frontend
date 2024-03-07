@@ -48,7 +48,7 @@ export class AppComponent {
       this.showModeratorBoard = this.roles.includes('ROLE_MODERATOR');
 
       this.username = user.username;
-      this.router.navigate(['choferes']);
+      this.router.navigate(['inicio']);
     } else {
       this.sidebarVisible = false;
       this.router.navigate(['login']);

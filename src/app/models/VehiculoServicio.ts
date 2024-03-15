@@ -16,6 +16,7 @@ export class VehiculoServicio {
     fechaServicio: Date | undefined;
     formattedDate: string | undefined;
     descripcion: string = "";
+    file: string = "";
 
     getFormattedDate(): string | undefined {
         if (this.fechaServicio) {

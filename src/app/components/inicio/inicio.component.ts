@@ -81,7 +81,6 @@ export class InicioComponent {
   colsConsumos: any[] = [
     { field: 'vehiculoDTO', subfield: 'numEconomico', header: 'Número económico', type: 'string' },
     { field: 'estacionDTO', subfield: 'estacion', header: 'Estación', type: 'string' },
-    { field: 'formattedDate', header: 'Fecha consumo', type: 'string' },
     { field: 'horaConsumo', header: 'Hora', type: 'string' },
     { field: 'productoDTO', subfield: 'producto', header: 'Producto', type: 'string' },
     { field: 'precio', header: 'Precio', type: 'string' },
@@ -90,6 +89,7 @@ export class InicioComponent {
     { field: 'odometro', header: 'Odómetro', type: 'string' },
     { field: 'rendimiento', header: 'Rendimiento', type: 'string' },
     { field: 'recorrido', header: 'Recorrido', type: 'string' },
+    { field: 'formattedDate', header: 'Fecha consumo', type: 'string' },
   ];
 
   constructor(
@@ -154,34 +154,23 @@ export class InicioComponent {
 
   public filtrarConsumo(borrarFiltros?: boolean): void {
     if(borrarFiltros) {
-      this.filtro = new Filtro;
-      this.selectedVehiculo = new Vehiculo;
+      this.filtroConsumo = new Filtro;
+      this.selectedVehiculoConsumo = new Vehiculo;
       this.selectedEstacionConsumo = new Estacion;
       this.selectedProductoConsumo = new Producto;
     } else {
-      this.filtro.idVehiculo = this.selectedVehiculoConsumo.idVehiculo;
-      this.filtro.idEstacion = this.selectedEstacionConsumo.idEstacion;
-      this.filtro.idProducto = this.selectedProductoConsumo.idProducto;
+      this.filtroConsumo.idVehiculo = this.selectedVehiculoConsumo.idVehiculo;
+      this.filtroConsumo.idEstacion = this.selectedEstacionConsumo.idEstacion;
+      this.filtroConsumo.idProducto = this.selectedProductoConsumo.idProducto;
     }
 
-    this.getCostoConsumos(this.filtro);
-    this.getIncidenciasEstaciones(this.filtro);
-    this.getIncidenciasProductos(this.filtro);
-    this.getVehiculosConsumos(this.filtro);
+    this.getCostoConsumos(this.filtroConsumo);
+    this.getIncidenciasEstaciones(this.filtroConsumo);
+    this.getIncidenciasProductos(this.filtroConsumo);
+    this.getVehiculosConsumos(this.filtroConsumo);
   }
 
   exportToCSV(cols: any[] | undefined, data: any[] | undefined) {
-    /*let cols: any[];
-    let data: any[];
-
-    if (reporte == 'consumos') {
-      cols = this.colsConsumos;
-      data = this.consumosTabla;
-    } else {
-      cols = this.cols;
-      data = this.serviciosTabla;
-    }*/
-
     const csvContent = "data:text/csv;charset=utf-8,"
       + cols!.map(col => col.header).join(',') + '\n' // Encabezados de las columnas
       + data!.map(row => cols!.map(col => this.getFieldValue(row, col)).join(',')).join('\n'); // Valores de las columnas
@@ -206,7 +195,6 @@ export class InicioComponent {
       return row[col.field] != null ? row[col.field].toString() : '';
     }
   }
-
 
   private getCostoServicio(filtro: Filtro): void {
     this.servicioService.getCostoServicios(filtro).then(result => {

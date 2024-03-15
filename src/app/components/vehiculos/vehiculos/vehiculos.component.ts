@@ -69,6 +69,33 @@ export class VehiculosComponent {
     )
   }
 
+  editVehiculo(vehiculo: Vehiculo): void {
+    this.saveVehiculoModel = vehiculo;
+
+    const foundChofer = this.choferes.find(chofer => chofer.idChofer == vehiculo.choferIdChofer);
+    const foundSucursal = this.sucursales.find(sucursal => sucursal.sucursal = vehiculo.sucursalDTO.sucursal);
+
+    if (foundChofer) {
+        this.saveVehiculoModel.choferDTO = foundChofer;
+        this.selectedChofer = foundChofer;
+    } else {
+        // Handle the case where chofer is not found
+        // For example, you can log a message or handle it in another way
+        console.error('Chofer not found for Vehiculo:', vehiculo);
+    }
+
+    if (foundSucursal) {
+        this.saveVehiculoModel.sucursalDTO = foundSucursal;
+        this.selectedSucursal = foundSucursal;
+    } else {
+        // Handle the case where sucursal is not found
+        // For example, you can log a message or handle it in another way
+        console.error('Sucursal not found for Vehiculo:', vehiculo);
+    }
+
+    this.addVehiculoSidebarVisible = true;
+  }
+
   openPopupVehiculo(vehiculo: Vehiculo) {
     this.vehiculoDialogVisible = true;
     this.selectedVehiculo = vehiculo;

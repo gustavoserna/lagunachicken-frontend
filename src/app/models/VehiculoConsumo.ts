@@ -8,7 +8,7 @@ export class VehiculoConsumo {
     vehiculoIdVehiculo: number = 0;
     estacionIdEstacion: number = 0;
     productoIdProducto: number = 0;
-    vehiculoDTO: Vehiculo = new Vehiculo;
+    vehiculoDTO: Vehiculo | undefined = new Vehiculo;
     estacionDTO: Estacion = new Estacion;
     productoDTO: Producto = new Producto;
     fechaConsumo: Date | undefined;

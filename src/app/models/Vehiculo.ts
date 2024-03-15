@@ -3,10 +3,12 @@ import { Sucursal } from "./Sucursal";
 
 export class Vehiculo {
     idVehiculo: number = 0;
+    choferIdChofer: number = 0;
+    sucursalIdSucursal: number = 0;
+    numEconomico: string = "";
     sucursalDTO: Sucursal = new Sucursal;
     choferDTO: Chofer = new Chofer;
-    numEconomico: string = ""; //
-    kilometraje: number = 0; //
+    kilometraje: number = 0;
     placas: string = "";
     estadoPlacas: string = "";
     modelo: string = "";

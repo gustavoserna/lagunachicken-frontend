@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { VehiculoServicio } from '../../models/VehiculoServicio';
 import { UtilityService } from '../../services/utility/utility.service';
 import { ChoferService } from '../../services/chofer/chofer.service';
@@ -9,13 +9,24 @@ import { Vehiculo } from '../../models/Vehiculo';
 import { Servicio } from '../../models/Servicio';
 import { ServicioService } from '../../services/servicio/servicio.service';
 import { Filtro } from '../../models/Filtro';
+import { format } from 'date-fns';
+import { es, fi } from 'date-fns/locale';
+import { FileUpload } from 'primeng/fileupload';
+import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-servicios-vehiculo',
   templateUrl: './servicios-vehiculo.component.html',
   styleUrl: './servicios-vehiculo.component.css'
 })
-export class ServiciosVehiculoComponent {
+export class ServiciosVehiculoComponent implements OnInit {
+
+  private fileControllerUrl: string;
+
+  //filtros
+  filtro: Filtro = new Filtro;
+  selectedServicio: Servicio = new Servicio;
+  selectedVehiculo: Vehiculo = new Vehiculo;
 
   vehiculos: Vehiculo[] = [];
   choferes: Chofer[] = [];
@@ -31,38 +42,48 @@ export class ServiciosVehiculoComponent {
     { field: 'folioFactura', header: 'Folio de factura', type: 'string' },
     { field: 'costo', header: 'Costo', type: 'string' },
     { field: 'descripcion', header: 'Descripción', type: 'string' },
+    { field: 'formattedDate', header: 'Fecha', type: 'string' }
   ];
   addServicioSidebarVisible: boolean = false;
   saveServicioModel: VehiculoServicio = new VehiculoServicio;
+
+  @ViewChild('fileUpload') fileUpload: FileUpload;
 
   constructor(
     private vehiculoService: VehiculoService,
     private utilityService: UtilityService,
     private choferesService: ChoferService,
     private servicioService: ServicioService
-  ) {
-
+  ) 
+  {
+    this.fileControllerUrl = environment.fileControllerUrl;
   }
 
   ngOnInit(): void {
-    this.getVehiculosServicios();
+    this.getVehiculosServicios(new Filtro);
     this.getVehiculos();
     this.getChoferes();
     this.getProveedores();
     this.getTiposServicio();
   }
 
+
   saveServicio(): void {
     this.saveServicioModel.vehiculoIdVehiculo = this.saveServicioModel.vehiculoDTO.idVehiculo;
     this.saveServicioModel.servicioIdServicio = this.saveServicioModel.servicioDTO.idServicio;
     this.saveServicioModel.proveedorIdProveedor = this.saveServicioModel.proveedorDTO.idProveedor;
 
-    this.vehiculoService.saveVehiculoServicio(this.saveServicioModel).subscribe(
+    // Upload the file here
+    // Access the uploaded file
+    const uploadedFiles = this.fileUpload.files;
+    const file: File = uploadedFiles[0];
+    
+    this.vehiculoService.saveVehiculoServicio(file, this.saveServicioModel).subscribe(
       (data: any) => {
         // success
         this.addServicioSidebarVisible = false;
         this.saveServicioModel = new VehiculoServicio;
-        this.getVehiculosServicios();
+        this.getVehiculosServicios(new Filtro);
       },
       (error: any) => {
         //error
@@ -70,8 +91,64 @@ export class ServiciosVehiculoComponent {
     )
   }
 
-  private getVehiculosServicios(): void {
-    this.servicioService.getVehiculosServicios(new Filtro).then(data => {
+  public filtrar(borrarFiltros?: boolean): void {
+    if(borrarFiltros) {
+      this.filtro = new Filtro;
+      this.selectedServicio = new Servicio;
+      this.selectedVehiculo = new Vehiculo;
+    } else {
+      this.filtro.idServicio = this.selectedServicio.idServicio;
+    this.filtro.idVehiculo = this.selectedVehiculo.idVehiculo;
+    }
+
+    this.getVehiculosServicios(this.filtro);
+  }
+
+  exportToCSV(cols: any[] | undefined, data: any[] | undefined) {
+    const csvContent = "data:text/csv;charset=utf-8,"
+      + cols!.map(col => col.header).join(',') + '\n' // Encabezados de las columnas
+      + data!.map(row => cols!.map(col => this.getFieldValue(row, col)).join(',')).join('\n'); // Valores de las columnas
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'reporte.csv');
+    document.body.appendChild(link); // Necesario para Firefox
+    link.click();
+  }
+
+  getFieldValue(row: any, col: any): string {
+    if (col.subfield) {
+      const subfields = col.subfield.split('.');
+      let value = row;
+      for (const subfield of subfields) {
+        value = value[col.field][subfield];
+      }
+      return value != null ? value.toString() : '';
+    } else {
+      return row[col.field] != null ? row[col.field].toString() : '';
+    }
+  }
+
+  downloadFile(vehiculoServicio: VehiculoServicio): void {
+    // Replace 'your_file_url' with the actual URL of your file to download
+    const fileUrl = this.fileControllerUrl + vehiculoServicio.file;
+    
+    // Create a new anchor element
+    const link = document.createElement('a');
+    link.setAttribute('target', '_self');
+    link.setAttribute('href', fileUrl);
+    
+    // Trigger the download by programmatically clicking the link
+    link.click();
+  }
+
+  private getVehiculosServicios(filtro: Filtro): void {
+    this.servicioService.getVehiculosServicios(this.filtro).then(data => {
+      data.forEach(element => {
+        const fecha = new Date(element.fechaServicio!);
+        element.formattedDate = format(fecha, "dd 'de' MMMM 'del' yyyy", { locale: es });
+      });
       this.servicios = data;
     });
   }

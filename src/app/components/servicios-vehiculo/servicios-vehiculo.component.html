@@ -4,13 +4,46 @@
     <p-button label="Registrar servicio" [rounded]="true" [raised]="true" severity="secondary"
         (click)="addServicioSidebarVisible=true"></p-button><br><br>
 
-    <p-table [value]="servicios" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-        responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
+    <!-- filtros -->
+    <p-panel header="Filtros">
+        <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
+            <div fxFlex="50%">
+                <p-calendar id="filtroFechaDe" name="filtroFechaDe" [(ngModel)]="filtro.fechaDesde"
+                    placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}"></p-calendar>
+                <p-dropdown [options]="vehiculos" [(ngModel)]="selectedVehiculo" [ngModelOptions]="{standalone: true}"
+                    optionLabel="numEconomico" [filter]="true" filterBy="nombre" [showClear]="false"
+                    placeholder="Filtrar por vehículo" autoWidth="false" [style]="{'width':'100%'}">
+                </p-dropdown>
+            </div>
+
+            <div fxFlex="50%">
+                <p-calendar id="filtroFechaHasta" name="filtroFechaHasta" [(ngModel)]="filtro.fechaHasta"
+                    placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}">
+                </p-calendar>
+
+                <p-dropdown [options]="tiposServicio" [(ngModel)]="selectedServicio"
+                    [ngModelOptions]="{standalone: true}" optionLabel="servicio" [filter]="true" filterBy="servicio"
+                    [showClear]="false" placeholder="Filtrar por Servicio" autoWidth="false" [style]="{'width':'100%'}">
+                </p-dropdown>
+            </div>
+        </div>
+
+        <p-button label="Aplicar" [outlined]="true" severity="secondary" class="right-aligned" type="button"
+            (click)="filtrar()"></p-button>
+        <p-button label="Borrar filtros" [outlined]="true" severity="secondary" class="right-aligned borrar-filtros"
+            type="button" (click)="filtrar(true)"></p-button>
+    </p-panel><br>
+
+
+    <!-- tabla -->
+    <p-table #serviciosTable [value]="servicios" [columns]="cols" [paginator]="true" [rows]="10"
+        [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
+                <th style="width: 4rem"></th>
             </tr>
         </ng-template>
 
@@ -25,6 +58,9 @@
                         {{rowData[col.field]}}
                     </ng-template>
                 </td>
+                <td style="text-align: center">
+                    <button pButton type="button" class="p-button-secondary" icon="pi pi-cloud-download" (click)="downloadFile(rowData)"></button>
+                </td>
             </tr>
         </ng-template>
 
@@ -33,7 +69,8 @@
         </ng-template>
 
         <ng-template pTemplate="paginatorright">
-            <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+            <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
+                (click)="exportToCSV(serviciosTable.columns, serviciosTable.value)"></p-button>
         </ng-template>
     </p-table>
 
@@ -42,48 +79,68 @@
         <ng-template pTemplate="header">Registrar servicio</ng-template>
         <ng-template pTemplate="content">
             <form class="form-container" (ngSubmit)="saveServicio()">
-                <p-dropdown [options]="vehiculos" [(ngModel)]="saveServicioModel.vehiculoDTO" [ngModelOptions]="{standalone: true}"
-                    optionLabel="numEconomico" [filter]="true" filterBy="numEconomico" [showClear]="false"
-                    placeholder="Seleccionar un vehículo" autoWidth="false" [style]="{'width':'100%'}">
+                <p-dropdown [options]="vehiculos" [(ngModel)]="saveServicioModel.vehiculoDTO"
+                    [ngModelOptions]="{standalone: true}" optionLabel="numEconomico" [filter]="true"
+                    filterBy="numEconomico" [showClear]="false" placeholder="Seleccionar un vehículo" autoWidth="false"
+                    [style]="{'width':'100%'}">
                 </p-dropdown><br>
 
-                <p-dropdown [options]="tiposServicio" [(ngModel)]="saveServicioModel.servicioDTO" [ngModelOptions]="{standalone: true}"
-                    optionLabel="servicio" [filter]="true" filterBy="servicio" [showClear]="false"
-                    placeholder="Seleccionar un tipo de servicio" autoWidth="false" [style]="{'width':'100%'}">
+                <p-dropdown [options]="tiposServicio" [(ngModel)]="saveServicioModel.servicioDTO"
+                    [ngModelOptions]="{standalone: true}" optionLabel="servicio" [filter]="true" filterBy="servicio"
+                    [showClear]="false" placeholder="Seleccionar un tipo de servicio" autoWidth="false"
+                    [style]="{'width':'100%'}">
                 </p-dropdown><br>
 
                 <span class="p-float-label">
-                    <input pInputText id="kilometraje" name="kilometraje"
-                        [(ngModel)]="saveServicioModel.kilometraje" class="full-width" />
+                    <input pInputText id="kilometraje" name="kilometraje" [(ngModel)]="saveServicioModel.kilometraje"
+                        class="full-width" />
                     <label for="kilometraje">Kilometraje</label>
                 </span><br>
 
-                <p-dropdown [options]="proveedores" [(ngModel)]="saveServicioModel.proveedorDTO" [ngModelOptions]="{standalone: true}"
-                    optionLabel="proveedor" [filter]="true" filterBy="proveedor" [showClear]="false"
-                    placeholder="Seleccionar un proveedor" autoWidth="false" [style]="{'width':'100%'}">
+                <p-dropdown [options]="proveedores" [(ngModel)]="saveServicioModel.proveedorDTO"
+                    [ngModelOptions]="{standalone: true}" optionLabel="proveedor" [filter]="true" filterBy="proveedor"
+                    [showClear]="false" placeholder="Seleccionar un proveedor" autoWidth="false"
+                    [style]="{'width':'100%'}">
                 </p-dropdown><br>
 
                 <span class="p-float-label">
-                    <input pInputText id="folioFactura" name="folioFactura"
-                        [(ngModel)]="saveServicioModel.folioFactura" class="full-width" />
+                    <input pInputText id="folioFactura" name="folioFactura" [(ngModel)]="saveServicioModel.folioFactura"
+                        class="full-width" />
                     <label for="folioFactura">Folio de factura</label>
                 </span><br>
 
                 <span class="p-float-label">
-                    <input pInputText id="costo" name="costo"
-                        [(ngModel)]="saveServicioModel.costo" class="full-width" />
+                    <input pInputText id="costo" name="costo" [(ngModel)]="saveServicioModel.costo"
+                        class="full-width" />
                     <label for="costo">Costo del servicio</label>
                 </span><br>
 
                 <span class="p-float-label">
-                    <p-calendar id="fechaServicio" name="fechaServicio" [(ngModel)]="saveServicioModel.fechaServicio" class="full-width"></p-calendar>
+                    <p-calendar id="fechaServicio" name="fechaServicio" [(ngModel)]="saveServicioModel.fechaServicio"
+                        class="full-width"></p-calendar>
                     <label for="fechaServicio">Fecha del servicio</label>
                 </span><br>
 
                 <span class="p-float-label">
-                    <input pInputText id="descripcion" name="descripcion"
-                        [(ngModel)]="saveServicioModel.descripcion" class="full-width" />
+                    <input pInputText id="descripcion" name="descripcion" [(ngModel)]="saveServicioModel.descripcion"
+                        class="full-width" />
                     <label for="descripcion">Datos adicionales</label>
+                </span><br>
+
+                <span class="p-float-label">
+                    <p-fileUpload 
+                        #fileUpload 
+                        name="myfile"
+                        url="/upload/url"
+                        accept=".pdf"
+                        mode="basic"
+                        chooseLabel="Choose PDF">
+                    </p-fileUpload>
+
+                    <!--<p-fileUpload #fileUpload mode="basic" name="file" accept=".pdf*" maxFileSize="1000000"
+                        [auto]="false" chooseLabel="Browse">
+                    </p-fileUpload>-->
+                    <!--<input type="file" (change)="onFileChange($event)" accept=".pdf" class="full-width">-->
                 </span><br>
 
                 <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned"

@@ -23,7 +23,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TabViewModule } from 'primeng/tabview';
-
+import { FileUploadModule } from 'primeng/fileupload';
 
 import { CalendarModule } from 'primeng/calendar';
 
@@ -85,7 +85,8 @@ import { RegistroConsumoComponent } from './components/registro-consumo/registro
     PanelMenuModule,
     CalendarModule,
     InputNumberModule,
-    TabViewModule
+    TabViewModule,
+    FileUploadModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

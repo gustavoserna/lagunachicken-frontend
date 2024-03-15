@@ -3,13 +3,53 @@
 <p-panel styleClass="main-panel">
     <p-button label="Registrar consumo" [rounded]="true" [raised]="true" severity="secondary" (click)="addConsumoSidebarVisible=true"></p-button><br><br>
 
-    <p-table [value]="consumos" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    <!-- filtros -->
+    <p-panel header="Filtros">
+        <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
+            <div fxFlex="50%">
+                <p-calendar id="filtroFechaDeConsumo" name="filtroFechaDeConsumo" [(ngModel)]="filtroConsumo.fechaDesde"
+                    placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}"></p-calendar>
+                <p-dropdown [options]="vehiculos" [(ngModel)]="selectedVehiculoConsumo"
+                    [ngModelOptions]="{standalone: true}" optionLabel="numEconomico" [filter]="true"
+                    filterBy="numEconomico" [showClear]="false" placeholder="Filtrar por vehículo" autoWidth="false"
+                    [style]="{'width':'100%', 'margin-bottom':'10px'}">
+                </p-dropdown>
+
+                <p-dropdown [options]="estaciones" [(ngModel)]="selectedEstacionConsumo"
+                    [ngModelOptions]="{standalone: true}" optionLabel="estacion" [filter]="true"
+                    filterBy="estacion" [showClear]="false" placeholder="Filtrar por Estacion" autoWidth="false"
+                    [style]="{'width':'100%'}">
+                </p-dropdown>
+            </div>
+
+            <div fxFlex="50%">
+                <p-calendar id="filtroFechaHastaConsumo" name="filtroFechaHastaConsumo" [(ngModel)]="filtroConsumo.fechaHasta"
+                    placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}">
+                </p-calendar>
+
+                <p-dropdown [options]="productos" [(ngModel)]="selectedProductoConsumo"
+                    [ngModelOptions]="{standalone: true}" optionLabel="producto" [filter]="true"
+                    filterBy="producto" [showClear]="false" placeholder="Filtrar por producto" autoWidth="false"
+                    [style]="{'width':'100%'}">
+                </p-dropdown>
+            </div>
+        </div>
+
+        <p-button label="Aplicar" [outlined]="true" severity="secondary" class="right-aligned" type="button"
+            (click)="filtrarConsumo()"></p-button>
+        <p-button label="Borrar filtros" [outlined]="true" severity="secondary"
+            class="right-aligned borrar-filtros" type="button" (click)="filtrarConsumo(true)"></p-button>
+    </p-panel><br>
+
+    <!-- tabla -->
+    <p-table #consumosTable [value]="consumos" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
         responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
+                <th style="width: 4rem"></th>
             </tr>
         </ng-template>
 
@@ -24,6 +64,10 @@
                         {{rowData[col.field]}}
                     </ng-template>
                 </td>
+                <td style="text-align: center">
+                    <button pButton type="button" class="p-button-secondary" icon="pi pi-pencil"
+                        (click)="editConsumo(rowData)"></button>
+                </td>
             </tr>
         </ng-template>
 
@@ -32,7 +76,7 @@
         </ng-template>
 
         <ng-template pTemplate="paginatorright">
-            <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+            <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download" (click)="exportToCSV(consumosTable.columns, consumosTable.value)"></p-button>
         </ng-template>
     </p-table>
 
@@ -41,7 +85,7 @@
         <ng-template pTemplate="header">Registrar consumo</ng-template>
         <ng-template pTemplate="content">
             <form class="form-container" (ngSubmit)="saveVehiculoConsumo()">
-                <p-dropdown [options]="vehiculos" [(ngModel)]="saveConsumoModel.vehiculoDTO" [ngModelOptions]="{standalone: true}"
+                <p-dropdown #vehiculoDropdown [options]="vehiculos" [(ngModel)]="saveConsumoModel.vehiculoDTO" [ngModelOptions]="{standalone: true}"
                     optionLabel="numEconomico" [filter]="true" filterBy="numEconomico" [showClear]="false"
                     placeholder="Seleccionar un vehículo" autoWidth="false" [style]="{'width':'100%'}">
                 </p-dropdown><br>

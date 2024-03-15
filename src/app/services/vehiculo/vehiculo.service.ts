@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environments';
 import { Vehiculo } from '../../models/Vehiculo';
 import { VehiculoServicio } from '../../models/VehiculoServicio';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,22 @@ export class VehiculoService {
     }
   }
 
-  public saveVehiculoServicio(vehiculoServicio: VehiculoServicio) {
-    return this.http.post<Vehiculo>(this.appControllerUrl + "vehiculo/servicio", vehiculoServicio, { headers: { "Content-Type": "application/json" } });
+  public saveVehiculoServicio(file: File, vehiculoServicio: VehiculoServicio): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('vehiculoServicio', JSON.stringify(vehiculoServicio));
+
+    // Opcional: Si necesitas enviar otros datos junto con el archivo, puedes hacerlo aquí
+    // formData.append('otherData', otherData);
+
+    // Define las cabeceras si es necesario (puede variar según tu API)
+    const headers = new HttpHeaders({
+      'Accept': 'application/json'
+      // otras cabeceras si es necesario
+    });
+
+    // Realiza la solicitud POST al servidor
+    return this.http.post<Vehiculo>(this.appControllerUrl + "vehiculo/servicio", formData, { headers: headers });
   }
 
 }

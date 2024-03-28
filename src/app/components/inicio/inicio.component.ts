@@ -12,7 +12,6 @@ import { Servicio } from '../../models/Servicio';
 import { VehiculoServicio } from '../../models/VehiculoServicio';
 import { es } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { Estacion } from '../../models/Estacion';
 import { Producto } from '../../models/Producto';
 import { VehiculoConsumo } from '../../models/VehiculoConsumo';
 import { ConsumoService } from '../../services/consumo/consumo.service';
@@ -42,11 +41,8 @@ export class InicioComponent {
   filtroConsumo: Filtro = new Filtro;
   vehiculosConsumo: Vehiculo[] = [];
   selectedVehiculoConsumo: Vehiculo = new Vehiculo;
-  estacionesConsumo: Estacion[] = [];
-  selectedEstacionConsumo: Estacion = new Estacion;
   productosConsumo: Producto[] = [];
   selectedProductoConsumo: Producto = new Producto;
-  incidenciasEstacionesConsumo: Estacion[] = [];
   incidenciasProductosConsumo: Producto[] = [];
   costoConsumos: CostoConsumos[] = [];
 
@@ -59,6 +55,7 @@ export class InicioComponent {
   //consumos
   @ViewChild('consumosTable') consumosTable!: Table;
   costosConsumoTable: any;
+  rendimientosPromediosTable: any;
   incidenciasConsumoTable: any;
   incidenciasProductoConsumoTable: any;
 
@@ -121,7 +118,6 @@ export class InicioComponent {
     // general
     this.getVehiculos();
     this.getServicios();
-    this.getEstaciones();
     this.getProductos();
 
     // servicios
@@ -132,8 +128,8 @@ export class InicioComponent {
     // consumos
     this.getVehiculosConsumos(new Filtro)
     this.getCostoConsumos(new Filtro);
-    this.getIncidenciasEstaciones(new Filtro);
     this.getIncidenciasProductos(new Filtro);
+    this.getRendimientosPromedio(new Filtro);
   }
 
   public filtrar(borrarFiltros?: boolean): void {
@@ -156,17 +152,15 @@ export class InicioComponent {
     if(borrarFiltros) {
       this.filtroConsumo = new Filtro;
       this.selectedVehiculoConsumo = new Vehiculo;
-      this.selectedEstacionConsumo = new Estacion;
       this.selectedProductoConsumo = new Producto;
     } else {
       this.filtroConsumo.idVehiculo = this.selectedVehiculoConsumo.idVehiculo;
-      this.filtroConsumo.idEstacion = this.selectedEstacionConsumo.idEstacion;
       this.filtroConsumo.idProducto = this.selectedProductoConsumo.idProducto;
     }
 
     this.getCostoConsumos(this.filtroConsumo);
-    this.getIncidenciasEstaciones(this.filtroConsumo);
     this.getIncidenciasProductos(this.filtroConsumo);
+    this.getRendimientosPromedio(this.filtroConsumo);
     this.getVehiculosConsumos(this.filtroConsumo);
   }
 
@@ -259,24 +253,25 @@ export class InicioComponent {
     });
   }
 
-  private getIncidenciasEstaciones(filtro: Filtro): void {
-    this.consumoService.getIncidenciasEstaciones(filtro).then(result => {
-      this.incidenciasEstacionesConsumo = result;
+  private getRendimientosPromedio(filtro: Filtro): void {
+    this.consumoService.getCostoConsumos(filtro).then(result => {
+      this.costoConsumos = result;
+      
       let data: Data = new Data;
       let dataset: Dataset = new Dataset;
       let datasets: Dataset[] = [];
       
-      dataset.label = "Conteo Estaciones";
-      dataset.backgroundColor = "#0cf5e5";
+      dataset.label = "Rendimiento Promedio";
+      dataset.backgroundColor = "#7c2af7";
 
-      this.incidenciasEstacionesConsumo.forEach(element => {
-        data.labels.push(element.estacion);
-        dataset.data.push(element.incidencias);
+      this.costoConsumos.forEach(element => {
+        data.labels.push(element.vehiculoDTO.numEconomico);
+        dataset.data.push(element.rendimientoPromedio);
       });
 
       datasets.push(dataset);
       data.datasets = datasets;
-      this.incidenciasConsumoTable = data;
+      this.rendimientosPromediosTable = data;
     });
   }
 
@@ -337,12 +332,6 @@ export class InicioComponent {
   private getServicios(): void {
     this.utilityService.getServicios().then(data => {
       this.servicios = data;
-    });
-  }
-
-  private getEstaciones(): void {
-    this.utilityService.getEstaciones().then(data => {
-      this.estacionesConsumo = data;
     });
   }
 

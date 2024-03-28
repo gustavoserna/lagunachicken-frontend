@@ -8,7 +8,9 @@ export class Vehiculo {
     numEconomico: string = "";
     sucursalDTO: Sucursal = new Sucursal;
     choferDTO: Chofer = new Chofer;
-    kilometraje: number = 0;
+    kilometraje: number | undefined;
+    kilometrajeAviso: number | undefined;
+    kilometrajePeriodo: number | undefined;
     placas: string = "";
     estadoPlacas: string = "";
     modelo: string = "";

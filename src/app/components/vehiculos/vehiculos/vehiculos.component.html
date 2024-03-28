@@ -179,6 +179,18 @@
                         </span><br>
 
                         <span class="p-float-label">
+                            <input pInputText id="kilometrajePeriodo" name="kilometrajePeriodo"
+                                [(ngModel)]="saveVehiculoModel.kilometrajePeriodo" class="full-width" />
+                            <label for="kilometrajePeriodo">Periodo de mantenimiento (km)</label>
+                        </span><br>
+
+                        <span class="p-float-label">
+                            <input pInputText id="kilometrajeAviso" name="kilometrajeAviso"
+                                [(ngModel)]="saveVehiculoModel.kilometrajeAviso" class="full-width" />
+                            <label for="kilometrajeAviso">Alerta de mantenimiento (km)</label>
+                        </span><br>
+
+                        <span class="p-float-label">
                             <input pInputText id="descripcion" name="descripcion"
                                 [(ngModel)]="saveVehiculoModel.descripcion" class="full-width" />
                             <label for="descripcion">Descripción</label>

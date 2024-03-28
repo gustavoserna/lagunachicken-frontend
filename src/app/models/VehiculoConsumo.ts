@@ -11,7 +11,7 @@ export class VehiculoConsumo {
     vehiculoDTO: Vehiculo | undefined = new Vehiculo;
     estacionDTO: Estacion = new Estacion;
     productoDTO: Producto = new Producto;
-    fechaConsumo: Date | undefined;
+    fechaConsumo: Date;
     formattedDate: string | undefined;
     horaConsumoJson: Hora = new Hora;
     horaConsumo: string = "";

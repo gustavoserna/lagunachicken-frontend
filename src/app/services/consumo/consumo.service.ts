@@ -47,20 +47,7 @@ export class ConsumoService {
       throw error;
     }
   }
-
-  public async getIncidenciasEstaciones(filtro: Filtro): Promise<Estacion[]> {
-    try {
-      const data = await this.http.post<Estacion[]>(this.appControllerUrl + "vehiculo/consumo/incidencia/estaciones", filtro, { headers: { "Content-Type": "application/json" } }).toPromise();
-      if (data !== undefined) {
-        return data;
-      } else {
-        throw new Error("Data is undefined");
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-
+  
   public async getIncidenciasProductos(filtro: Filtro): Promise<Producto[]> {
     try {
       const data = await this.http.post<Producto[]>(this.appControllerUrl + "vehiculo/consumo/incidencia/productos", filtro, { headers: { "Content-Type": "application/json" } }).toPromise();

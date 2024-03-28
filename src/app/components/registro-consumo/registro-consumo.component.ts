@@ -101,8 +101,10 @@ export class RegistroConsumoComponent {
     const horaConsumo = new Hora();
     horaConsumo.horaConsumo = vehiculoConsumo.horaConsumo;
 
-    this.saveConsumoModel.fechaConsumo = new Date(utility.formatFromStringToDate(vehiculoConsumo.fechaConsumo!));
+    const formattedDate = new Date(utility.formatFromStringToDate(vehiculoConsumo.fechaConsumo));
+    this.saveConsumoModel.fechaConsumo = formattedDate;
     this.saveConsumoModel.horaConsumoJson = horaConsumo;
+
     const foundVehiculo = this.vehiculos.find(vehiculo => vehiculo.numEconomico == vehiculoConsumo.vehiculoDTO!.numEconomico);
     this.saveConsumoModel.vehiculoDTO = foundVehiculo;
 

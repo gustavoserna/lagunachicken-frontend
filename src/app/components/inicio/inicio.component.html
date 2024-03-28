@@ -105,12 +105,6 @@
                             filterBy="numEconomico" [showClear]="false" placeholder="Filtrar por vehículo" autoWidth="false"
                             [style]="{'width':'100%', 'margin-bottom':'10px'}">
                         </p-dropdown>
-
-                        <p-dropdown [options]="estacionesConsumo" [(ngModel)]="selectedEstacionConsumo"
-                            [ngModelOptions]="{standalone: true}" optionLabel="estacion" [filter]="true"
-                            filterBy="estacion" [showClear]="false" placeholder="Filtrar por Estacion" autoWidth="false"
-                            [style]="{'width':'100%'}">
-                        </p-dropdown>
                     </div>
 
                     <div fxFlex="50%">
@@ -140,8 +134,8 @@
                 </div>
 
                 <div fxFlex="33%">
-                    <!-- chart incidencias estaciones -->
-                    <p-chart type="bar" [data]="incidenciasConsumoTable" [options]="options"></p-chart><br>
+                    <!-- chart rendimientos promedio -->
+                    <p-chart type="bar" [data]="rendimientosPromediosTable" [options]="options"></p-chart><br>
                 </div>
 
                 <div fxFlex="33%">

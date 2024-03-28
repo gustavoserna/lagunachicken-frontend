@@ -19,6 +19,8 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": false, // desabilitar esto para marcar cuando una variable no esta inicializada
     "lib": [
       "ES2022",
       "dom"

@@ -5,6 +5,7 @@ import { Vehiculo } from "./Vehiculo";
 
 export class VehiculoConsumo {
     idVehiculoConsumo: number = 0;
+    despacho: string = "";
     vehiculoIdVehiculo: number = 0;
     estacionIdEstacion: number = 0;
     productoIdProducto: number = 0;

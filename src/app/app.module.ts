@@ -44,6 +44,12 @@ import { ConsumosComponent } from './components/consumos/consumos.component';
 import { EstacionesComponent } from './components/estaciones/estaciones.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { RegistroConsumoComponent } from './components/registro-consumo/registro-consumo.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { Router } from '@angular/router';
+import { ProveedoresComponent } from './components/proveedores/proveedores.component';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import {ToastModule} from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -60,7 +66,8 @@ import { RegistroConsumoComponent } from './components/registro-consumo/registro
     ConsumosComponent,
     EstacionesComponent,
     ProductosComponent,
-    RegistroConsumoComponent
+    RegistroConsumoComponent,
+    ProveedoresComponent
   ],
   imports: [
     BrowserModule,
@@ -86,9 +93,23 @@ import { RegistroConsumoComponent } from './components/registro-consumo/registro
     CalendarModule,
     InputNumberModule,
     TabViewModule,
-    FileUploadModule
+    FileUploadModule,
+    OverlayPanelModule,
+    MessageModule,
+    MessagesModule,
+    ToastModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  public constructor(private router: Router) {
+
+    if(localStorage.getItem("lastUrl")=="/error")
+    {
+      localStorage.setItem("lastUrl",null);
+      this.router.navigate(['/']);
+    
+    }
+  }
+}

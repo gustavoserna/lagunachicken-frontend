@@ -7,7 +7,7 @@
                 <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
                     <div fxFlex="50%">
                         <p-calendar id="filtroFechaDe" name="filtroFechaDe" [(ngModel)]="filtro.fechaDesde"
-                            placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}"></p-calendar>
+                            placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy"></p-calendar>
 
                         <!--<p-dropdown [options]="choferes" [(ngModel)]="selectedChofer" [ngModelOptions]="{standalone: true}"
                             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="false"
@@ -22,7 +22,7 @@
 
                     <div fxFlex="50%">
                         <p-calendar id="filtroFechaHasta" name="filtroFechaHasta" [(ngModel)]="filtro.fechaHasta"
-                            placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}">
+                            placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy">
                         </p-calendar>
 
                         <p-dropdown [options]="servicios" [(ngModel)]="selectedServicio"
@@ -94,7 +94,7 @@
                 <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
                     <div fxFlex="50%">
                         <p-calendar id="filtroFechaDeConsumo" name="filtroFechaDeConsumo" [(ngModel)]="filtroConsumo.fechaDesde"
-                            placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}"></p-calendar>
+                            placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy"></p-calendar>
 
                         <!--<p-dropdown [options]="choferes" [(ngModel)]="selectedChofer" [ngModelOptions]="{standalone: true}"
                             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="false"
@@ -109,7 +109,7 @@
 
                     <div fxFlex="50%">
                         <p-calendar id="filtroFechaHastaConsumo" name="filtroFechaHastaConsumo" [(ngModel)]="filtroConsumo.fechaHasta"
-                            placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}">
+                            placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy">
                         </p-calendar>
 
                         <p-dropdown [options]="productosConsumo" [(ngModel)]="selectedProductoConsumo"

@@ -3,6 +3,7 @@ import { Role } from '../../models/Role';
 import { AuthService } from '../../services/auth/auth.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-login',
@@ -49,7 +50,7 @@ export class LoginComponent implements OnInit {
   }
 
   reloadPage(): void {
-    window.location.reload();
+    window.location.href = environment.homeUrl;
   }
 
 }

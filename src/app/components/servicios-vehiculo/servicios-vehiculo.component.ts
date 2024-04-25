@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { es, fi } from 'date-fns/locale';
 import { FileUpload } from 'primeng/fileupload';
 import { environment } from '../../../environments/environments';
+import { utility } from '../../utility/utility';
 
 @Component({
   selector: 'app-servicios-vehiculo',
@@ -147,7 +148,7 @@ export class ServiciosVehiculoComponent implements OnInit {
     this.servicioService.getVehiculosServicios(this.filtro).then(data => {
       data.forEach(element => {
         const fecha = new Date(element.fechaServicio!);
-        element.formattedDate = format(fecha, "dd 'de' MMMM 'del' yyyy", { locale: es });
+        element.formattedDate = utility.formatFromStringToDateDescriptive(fecha);
       });
       this.servicios = data;
     });

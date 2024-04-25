@@ -48,6 +48,7 @@ export class BotoneraComponent {
         label: 'Vehículos', 
         icon: 'pi pi-truck', 
         items: [
+          { label: 'Lista de proveedores'/*, icon: 'pi pi-list'*/, routerLink: ['/proveedores']  },
           { label: 'Lista de vehículos'/*, icon: 'pi pi-list'*/, routerLink: ['/vehiculos']  },
           { label: 'Registro de servicios'/*, icon: 'pi pi-wrench'*/, routerLink: ['/registro-servicios']  }
         ]

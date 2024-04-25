@@ -1,14 +1,35 @@
 <app-botonera></app-botonera>
 
 <p-panel styleClass="main-panel">
-    <p-button label="Registrar consumo" [rounded]="true" [raised]="true" severity="secondary" (click)="addConsumoSidebarVisible=true"></p-button><br><br>
+    <p-toast></p-toast>
+    <div fxLayout="row" fxLayoutAlign="space-between stretch" [style]="{'margin-bottom':'7px'}">
+        <div>
+            <p-fileUpload 
+                #fileUpload 
+                name="myCSV" 
+                [customUpload]="true" (uploadHandler)="handleCsvUpload($event)"
+                accept=".csv"
+                mode="basic"
+                chooseLabel="Cargar excel" />
+        </div>
+
+        <div>
+            <p-button 
+                label="Registrar consumo"
+                mode="basic" 
+                [rounded]="false" 
+                [raised]="true" 
+                severity="secondary"  
+                (click)="addConsumoSidebarVisible=true" />
+        </div>
+    </div>
 
     <!-- filtros -->
     <p-panel header="Filtros">
         <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
             <div fxFlex="50%">
                 <p-calendar id="filtroFechaDeConsumo" name="filtroFechaDeConsumo" [(ngModel)]="filtroConsumo.fechaDesde"
-                    placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}"></p-calendar>
+                    placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy"></p-calendar>
                 <p-dropdown [options]="vehiculos" [(ngModel)]="selectedVehiculoConsumo"
                     [ngModelOptions]="{standalone: true}" optionLabel="numEconomico" [filter]="true"
                     filterBy="numEconomico" [showClear]="false" placeholder="Filtrar por vehículo" autoWidth="false"
@@ -16,34 +37,33 @@
                 </p-dropdown>
 
                 <p-dropdown [options]="estaciones" [(ngModel)]="selectedEstacionConsumo"
-                    [ngModelOptions]="{standalone: true}" optionLabel="estacion" [filter]="true"
-                    filterBy="estacion" [showClear]="false" placeholder="Filtrar por Estacion" autoWidth="false"
-                    [style]="{'width':'100%'}">
+                    [ngModelOptions]="{standalone: true}" optionLabel="estacion" [filter]="true" filterBy="estacion"
+                    [showClear]="false" placeholder="Filtrar por Estacion" autoWidth="false" [style]="{'width':'100%'}">
                 </p-dropdown>
             </div>
 
             <div fxFlex="50%">
-                <p-calendar id="filtroFechaHastaConsumo" name="filtroFechaHastaConsumo" [(ngModel)]="filtroConsumo.fechaHasta"
-                    placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}">
+                <p-calendar id="filtroFechaHastaConsumo" name="filtroFechaHastaConsumo"
+                    [(ngModel)]="filtroConsumo.fechaHasta" placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}"
+                    dateFormat="dd/mm/yy">
                 </p-calendar>
 
                 <p-dropdown [options]="productos" [(ngModel)]="selectedProductoConsumo"
-                    [ngModelOptions]="{standalone: true}" optionLabel="producto" [filter]="true"
-                    filterBy="producto" [showClear]="false" placeholder="Filtrar por producto" autoWidth="false"
-                    [style]="{'width':'100%'}">
+                    [ngModelOptions]="{standalone: true}" optionLabel="producto" [filter]="true" filterBy="producto"
+                    [showClear]="false" placeholder="Filtrar por producto" autoWidth="false" [style]="{'width':'100%'}">
                 </p-dropdown>
             </div>
         </div>
 
         <p-button label="Aplicar" [outlined]="true" severity="secondary" class="right-aligned" type="button"
             (click)="filtrarConsumo()"></p-button>
-        <p-button label="Borrar filtros" [outlined]="true" severity="secondary"
-            class="right-aligned borrar-filtros" type="button" (click)="filtrarConsumo(true)"></p-button>
+        <p-button label="Borrar filtros" [outlined]="true" severity="secondary" class="right-aligned borrar-filtros"
+            type="button" (click)="filtrarConsumo(true)"></p-button>
     </p-panel><br>
 
     <!-- tabla -->
-    <p-table #consumosTable [value]="consumos" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-        responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
+    <p-table #consumosTable [value]="consumos" [columns]="cols" [paginator]="true" [rows]="10"
+        [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns">
@@ -76,7 +96,8 @@
         </ng-template>
 
         <ng-template pTemplate="paginatorright">
-            <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download" (click)="exportToCSV(consumosTable.columns, consumosTable.value)"></p-button>
+            <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
+                (click)="exportToCSV(consumosTable.columns, consumosTable.value)"></p-button>
         </ng-template>
     </p-table>
 
@@ -85,29 +106,33 @@
         <ng-template pTemplate="header">Registrar consumo</ng-template>
         <ng-template pTemplate="content">
             <form class="form-container" (ngSubmit)="saveVehiculoConsumo()">
-                <p-dropdown #vehiculoDropdown [options]="vehiculos" [(ngModel)]="saveConsumoModel.vehiculoDTO" [ngModelOptions]="{standalone: true}"
-                    optionLabel="numEconomico" [filter]="true" filterBy="numEconomico" [showClear]="false"
-                    placeholder="Seleccionar un vehículo" autoWidth="false" [style]="{'width':'100%'}">
+                <p-dropdown #vehiculoDropdown [options]="vehiculos" [(ngModel)]="saveConsumoModel.vehiculoDTO"
+                    [ngModelOptions]="{standalone: true}" optionLabel="numEconomico" [filter]="true"
+                    filterBy="numEconomico" [showClear]="false" placeholder="Seleccionar un vehículo" autoWidth="false"
+                    [style]="{'width':'100%'}">
                 </p-dropdown><br>
 
-                <p-dropdown [options]="estaciones" [(ngModel)]="saveConsumoModel.estacionDTO" [ngModelOptions]="{standalone: true}"
-                    optionLabel="estacion" [filter]="true" filterBy="estacion" [showClear]="false"
-                    placeholder="Seleccionar una estación" autoWidth="false" [style]="{'width':'100%'}">
+                <p-dropdown [options]="estaciones" [(ngModel)]="saveConsumoModel.estacionDTO"
+                    [ngModelOptions]="{standalone: true}" optionLabel="estacion" [filter]="true" filterBy="estacion"
+                    [showClear]="false" placeholder="Seleccionar una estación" autoWidth="false"
+                    [style]="{'width':'100%'}">
                 </p-dropdown><br>
 
-                <span class="p-float-label">
-                    <p-calendar id="fechaConsumo" name="fechaConsumo" [(ngModel)]="saveConsumoModel.fechaConsumo" class="full-width"></p-calendar>
-                    <label for="fechaConsumo">Fecha de consumo</label>
-                </span><br>
+                <label for="fechaConsumo">Fecha de consumo</label>
+                <input class="native-date-picker full-width" id="fechaConsumo" name="fechaConsumo"
+                    [(ngModel)]="saveConsumoModel.fechaConsumo" type="date" />
+                <br>
 
-                <p-dropdown [options]="horas" [(ngModel)]="saveConsumoModel.horaConsumoJson" [ngModelOptions]="{standalone: true}"
-                    optionLabel="horaConsumo" [filter]="true" filterBy="horaConsumo" [showClear]="false"
-                    placeholder="Seleccionar una hora" autoWidth="false" [style]="{'width':'100%'}">
+                <p-dropdown [options]="horas" [(ngModel)]="saveConsumoModel.horaConsumoJson"
+                    [ngModelOptions]="{standalone: true}" optionLabel="horaConsumo" [filter]="true"
+                    filterBy="horaConsumo" [showClear]="false" placeholder="Seleccionar una hora" autoWidth="false"
+                    [style]="{'width':'100%'}">
                 </p-dropdown><br>
 
-                <p-dropdown [options]="productos" [(ngModel)]="saveConsumoModel.productoDTO" [ngModelOptions]="{standalone: true}"
-                    optionLabel="producto" [filter]="true" filterBy="producto" [showClear]="false"
-                    placeholder="Seleccionar un producto" autoWidth="false" [style]="{'width':'100%'}">
+                <p-dropdown [options]="productos" [(ngModel)]="saveConsumoModel.productoDTO"
+                    [ngModelOptions]="{standalone: true}" optionLabel="producto" [filter]="true" filterBy="producto"
+                    [showClear]="false" placeholder="Seleccionar un producto" autoWidth="false"
+                    [style]="{'width':'100%'}">
                 </p-dropdown><br>
 
                 <span class="p-float-label">
@@ -140,7 +165,8 @@
                     <label for="recorrido">Recorrido</label>
                 </span><br>
 
-                <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned" type="submit"></p-button>
+                <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned"
+                    type="submit"></p-button>
             </form>
         </ng-template>
     </p-sidebar>

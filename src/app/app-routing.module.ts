@@ -12,6 +12,7 @@ import { ConsumosComponent } from './components/consumos/consumos.component';
 import { EstacionesComponent } from './components/estaciones/estaciones.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { RegistroConsumoComponent } from './components/registro-consumo/registro-consumo.component';
+import { ProveedoresComponent } from './components/proveedores/proveedores.component';
 
 const routes: Routes = [
   //{ path: 'dashboard', component: InicioComponent, data: {animation: 'isRight'}},
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'servicios', component: ServiciosComponent, data: { title: 'Servicios' } },
   { path: 'registro-servicios', component: ServiciosVehiculoComponent, data: { title: 'Registro' } },
   { path: 'consumo', component: ConsumosComponent, data: { title: 'Consumo' } },
+  { path: 'proveedores', component: ProveedoresComponent, data: { title: 'Lista de proveedores' } },
   { path: 'estaciones', component: EstacionesComponent, data: { title: 'Estaciones' } },
   { path: 'productos', component: ProductosComponent, data: { title: 'Productos' } },
   { path: 'registro-consumo', component: RegistroConsumoComponent, data: { title: 'Registro consumo' } },
@@ -31,7 +33,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true }) ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

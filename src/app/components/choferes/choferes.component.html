@@ -1,10 +1,12 @@
 <app-botonera></app-botonera>
 
 <p-panel styleClass="main-panel">
-    <p-button label="Agregar chofer" [rounded]="true" [raised]="true" severity="secondary" (click)="addChoferSidebarVisible=true"></p-button><br><br>
+    <p-toast></p-toast>
+    <p-button label="Agregar chofer" [rounded]="true" [raised]="true" severity="secondary"
+        (click)="addChoferSidebarVisible=true"></p-button><br><br>
 
-    <p-table [value]="choferes" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
-        [rowsPerPageOptions]="[10,25,50]">
+    <p-table [value]="choferes" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns">
@@ -40,19 +42,21 @@
     <p-sidebar [(visible)]="addChoferSidebarVisible" position="right">
         <ng-template pTemplate="header">Agregar chofer</ng-template>
         <ng-template pTemplate="content">
-            <form class="form-container" (ngSubmit)="saveChofer()"><br><br>
+            <form class="form-container" (ngSubmit)="saveChofer()">
                 <span class="p-float-label">
-                    <input pInputText id="nombre" name="nombre" [(ngModel)]="saveChoferModel.nombre" class="full-width" />
+                    <input pInputText id="nombre" name="nombre" [(ngModel)]="saveChoferModel.nombre"
+                        class="full-width" />
                     <label for="nombre">Nombre del chofer</label>
                 </span><br>
 
-                <span class="p-float-label">
-                    <p-calendar id="fechaNacimiento" name="fechaNacimiento" [(ngModel)]="saveChoferModel.fechaNacimiento"></p-calendar>
-                    <label for="fechaNacimiento">Fecha de nacimiento</label>
-                </span><br>
+                <label for="fechaNacimiento">Fecha de nacimiento</label>
+                <input class="native-date-picker" id="fechaNacimiento" name="fechaNacimiento"
+                    [(ngModel)]="saveChoferModel.fechaNacimiento" type="date" placeholder="Fecha de nacimiento" />
+                <br>
 
                 <span class="p-float-label">
-                    <input pInputText id="direccion" name="direccion" [(ngModel)]="saveChoferModel.direccion" class="full-width" />
+                    <input pInputText id="direccion" name="direccion" [(ngModel)]="saveChoferModel.direccion"
+                        class="full-width" />
                     <label for="direccion">Dirección</label>
                 </span><br>
 
@@ -61,17 +65,19 @@
                     <label for="nss">Número de seguro social</label>
                 </span><br>
 
-                <span class="p-float-label">
-                    <p-calendar id="vencimientoLicencia" name="vencimientoLicencia" [(ngModel)]="saveChoferModel.vencimientoLicencia"></p-calendar>
-                    <label for="vencimientoLicencia">Vencimiento de licencia</label>
-                </span><br>
+                <label for="vencimientoLicencia">Vencimiento de licencia</label>
+                <input class="native-date-picker" id="vencimientoLicencia" name="vencimientoLicencia"
+                    [(ngModel)]="saveChoferModel.vencimientoLicencia" type="date" /><br>
 
                 <span class="p-float-label">
-                    <p-dropdown [options]="sangres" id="tipoSangre" name="tipoSangre" [(ngModel)]="saveChoferModel.tipoSangre" class="full-width"  placeholder="Selecciona un tipo de sangre"></p-dropdown>
+                    <p-dropdown [options]="sangres" id="tipoSangre" name="tipoSangre"
+                        [(ngModel)]="saveChoferModel.tipoSangre" class="full-width"
+                        placeholder="Selecciona un tipo de sangre"></p-dropdown>
                     <label for="tipoSangre">Tipo de sangre</label>
                 </span><br>
 
-                <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned" type="submit"></p-button>
+                <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned"
+                    type="submit"></p-button>
             </form>
         </ng-template>
     </p-sidebar>

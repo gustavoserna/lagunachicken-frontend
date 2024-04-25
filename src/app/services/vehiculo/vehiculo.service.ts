@@ -35,7 +35,10 @@ export class VehiculoService {
 
   public saveVehiculoServicio(file: File, vehiculoServicio: VehiculoServicio): Observable<any> {
     const formData: FormData = new FormData();
-    formData.append('file', file, file.name);
+    if (file !== undefined) {
+      formData.append('file', file, file.name);
+    }
+
     formData.append('vehiculoServicio', JSON.stringify(vehiculoServicio));
 
     // Opcional: Si necesitas enviar otros datos junto con el archivo, puedes hacerlo aquí

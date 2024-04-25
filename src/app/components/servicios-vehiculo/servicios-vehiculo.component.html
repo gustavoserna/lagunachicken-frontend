@@ -9,7 +9,7 @@
         <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
             <div fxFlex="50%">
                 <p-calendar id="filtroFechaDe" name="filtroFechaDe" [(ngModel)]="filtro.fechaDesde"
-                    placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}"></p-calendar>
+                    placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy"></p-calendar>
                 <p-dropdown [options]="vehiculos" [(ngModel)]="selectedVehiculo" [ngModelOptions]="{standalone: true}"
                     optionLabel="numEconomico" [filter]="true" filterBy="nombre" [showClear]="false"
                     placeholder="Filtrar por vehículo" autoWidth="false" [style]="{'width':'100%'}">
@@ -18,7 +18,7 @@
 
             <div fxFlex="50%">
                 <p-calendar id="filtroFechaHasta" name="filtroFechaHasta" [(ngModel)]="filtro.fechaHasta"
-                    placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}">
+                    placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy">
                 </p-calendar>
 
                 <p-dropdown [options]="tiposServicio" [(ngModel)]="selectedServicio"
@@ -114,11 +114,11 @@
                         class="full-width" />
                     <label for="costo">Costo del servicio</label>
                 </span><br>
-
+                
                 <span class="p-float-label">
-                    <p-calendar id="fechaServicio" name="fechaServicio" [(ngModel)]="saveServicioModel.fechaServicio"
-                        class="full-width"></p-calendar>
-                    <label for="fechaServicio">Fecha del servicio</label>
+                    <input class="native-date-picker" id="fechaServicio" name="fechaServicio" [(ngModel)]="saveServicioModel.fechaServicio" type="date" />
+                    <!--<p-calendar id="fechaServicio" name="fechaServicio" [(ngModel)]="saveServicioModel.fechaServicio"
+                        class="full-width" dateFormat="dd/mm/yy"></p-calendar>-->
                 </span><br>
 
                 <span class="p-float-label">
@@ -136,11 +136,6 @@
                         mode="basic"
                         chooseLabel="Choose PDF">
                     </p-fileUpload>
-
-                    <!--<p-fileUpload #fileUpload mode="basic" name="file" accept=".pdf*" maxFileSize="1000000"
-                        [auto]="false" chooseLabel="Browse">
-                    </p-fileUpload>-->
-                    <!--<input type="file" (change)="onFileChange($event)" accept=".pdf" class="full-width">-->
                 </span><br>
 
                 <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned"

@@ -222,11 +222,9 @@
                             <label for="numeroPoliza">Número de Póliza</label>
                         </span><br>
 
-                        <span class="p-float-label">
-                            <input pInputText id="vencimientoPoliza" name="vencimientoPoliza"
-                                [(ngModel)]="saveVehiculoModel.vencimientoPoliza" class="full-width" />
-                            <label for="vencimientoPoliza">Vencimiento de la Póliza</label>
-                        </span><br>
+                        <label for="vencimientoPoliza">Vencimiento de la Póliza</label>
+                        <input class="native-date-picker" id="vencimientoPoliza" name="vencimientoPoliza" [(ngModel)]="saveVehiculoModel.vencimientoPoliza" type="date" />
+                        <br>
                     </p-accordionTab>
                 </p-accordion><br>
 

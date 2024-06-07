@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { Proveedor } from '../../models/Proveedor';
 import { UtilityService } from '../../services/utility/utility.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-proveedores',
   templateUrl: './proveedores.component.html',
-  styleUrl: './proveedores.component.css'
+  styleUrl: './proveedores.component.css',
+  providers: [MessageService]
 })
 export class ProveedoresComponent {
 
@@ -16,7 +18,7 @@ export class ProveedoresComponent {
   addProveedorSidebarVisible: boolean = false;
   saveProveedorModel: Proveedor = new Proveedor;
 
-  constructor(private proveedorService: UtilityService) {
+  constructor(private proveedorService: UtilityService, private messageService: MessageService) {
 
   }
 
@@ -28,14 +30,21 @@ export class ProveedoresComponent {
     this.proveedorService.saveProveedor(this.saveProveedorModel).subscribe(
       (data: any) => {
         // success
+        this.messageService.add({ severity: 'success', sticky: true, summary: 'Éxito', detail: 'Proveedor guardado.' });
         this.addProveedorSidebarVisible = false;
         this.saveProveedorModel = new Proveedor;
         this.getProveedores();
       },
       (error: any) => {
-        //error
+        this.messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: error.error.message });
       }
     )
+  }
+
+  editProveedor(proveedor: Proveedor): void {
+    this.saveProveedorModel = proveedor;
+
+    this.addProveedorSidebarVisible = true;
   }
 
   private getProveedores(): void {

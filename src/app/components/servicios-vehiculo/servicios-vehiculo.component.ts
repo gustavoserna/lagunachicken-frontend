@@ -14,11 +14,13 @@ import { es, fi } from 'date-fns/locale';
 import { FileUpload } from 'primeng/fileupload';
 import { environment } from '../../../environments/environments';
 import { utility } from '../../utility/utility';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-servicios-vehiculo',
   templateUrl: './servicios-vehiculo.component.html',
-  styleUrl: './servicios-vehiculo.component.css'
+  styleUrl: './servicios-vehiculo.component.css',
+  providers: [MessageService]
 })
 export class ServiciosVehiculoComponent implements OnInit {
 
@@ -54,7 +56,8 @@ export class ServiciosVehiculoComponent implements OnInit {
     private vehiculoService: VehiculoService,
     private utilityService: UtilityService,
     private choferesService: ChoferService,
-    private servicioService: ServicioService
+    private servicioService: ServicioService,
+    private messageService: MessageService
   ) 
   {
     this.fileControllerUrl = environment.fileControllerUrl;
@@ -82,12 +85,13 @@ export class ServiciosVehiculoComponent implements OnInit {
     this.vehiculoService.saveVehiculoServicio(file, this.saveServicioModel).subscribe(
       (data: any) => {
         // success
+        this.messageService.add({ severity: 'success', sticky: true, summary: 'Éxito', detail: 'Servicio guardado.' });
         this.addServicioSidebarVisible = false;
         this.saveServicioModel = new VehiculoServicio;
         this.getVehiculosServicios(new Filtro);
       },
       (error: any) => {
-        //error
+        this.messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: error.error.message });
       }
     )
   }
@@ -147,8 +151,7 @@ export class ServiciosVehiculoComponent implements OnInit {
   private getVehiculosServicios(filtro: Filtro): void {
     this.servicioService.getVehiculosServicios(this.filtro).then(data => {
       data.forEach(element => {
-        const fecha = new Date(element.fechaServicio!);
-        element.formattedDate = utility.formatFromStringToDateDescriptive(fecha);
+        element.formattedDate = utility.formatFromStringToDateDescriptive(element.fechaServicio.toString().split('T')[0]);
       });
       this.servicios = data;
     });

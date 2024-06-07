@@ -12,6 +12,7 @@
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
+                <th style="width: 4rem"></th>
             </tr>
         </ng-template>
 
@@ -25,6 +26,10 @@
                     <ng-template #normal_content>
                         {{rowData[col.field]}}
                     </ng-template>
+                </td>
+                <td style="text-align: center">
+                    <button pButton type="button" class="p-button-secondary" icon="pi pi-pencil"
+                        (click)="editChofer(rowData)"></button>
                 </td>
             </tr>
         </ng-template>
@@ -51,7 +56,7 @@
 
                 <label for="fechaNacimiento">Fecha de nacimiento</label>
                 <input class="native-date-picker" id="fechaNacimiento" name="fechaNacimiento"
-                    [(ngModel)]="saveChoferModel.fechaNacimiento" type="date" placeholder="Fecha de nacimiento" />
+                    [(ngModel)]="saveChoferModel.fechaNacimientoString" type="date" placeholder="Fecha de nacimiento" />
                 <br>
 
                 <span class="p-float-label">
@@ -67,7 +72,7 @@
 
                 <label for="vencimientoLicencia">Vencimiento de licencia</label>
                 <input class="native-date-picker" id="vencimientoLicencia" name="vencimientoLicencia"
-                    [(ngModel)]="saveChoferModel.vencimientoLicencia" type="date" /><br>
+                    [(ngModel)]="saveChoferModel.vencimientoLicenciaString" type="date" /><br>
 
                 <span class="p-float-label">
                     <p-dropdown [options]="sangres" id="tipoSangre" name="tipoSangre"

@@ -35,6 +35,14 @@ export class ChoferesComponent {
   }
 
   saveChofer(): void {
+    this.saveChoferModel.fechaNacimiento = new Date(this.saveChoferModel.fechaNacimientoString);
+    this.saveChoferModel.vencimientoLicencia = new Date(this.saveChoferModel.vencimientoLicenciaString);
+
+    // validate dates
+    if(!utility.validateDate(this.saveChoferModel.fechaNacimiento, this.messageService) || !utility.validateDate(this.saveChoferModel.vencimientoLicencia, this.messageService)) {
+      return;
+    }
+
     this.choferesService.saveChofer(this.saveChoferModel).subscribe(
       (data: any) => {
         // success
@@ -49,11 +57,20 @@ export class ChoferesComponent {
     )
   }
 
+  editChofer(chofer: Chofer): void {
+    this.saveChoferModel = chofer;
+
+    this.saveChoferModel.fechaNacimientoString = chofer.fechaNacimiento.toString().split('T')[0];
+    this.saveChoferModel.vencimientoLicenciaString = chofer.vencimientoLicencia.toString().split('T')[0];
+
+    this.addChoferSidebarVisible = true;
+  }
+
   private getChoferes(): void {
     this.choferesService.getChoferes().then(data => {
       data.forEach(element => {
-        const formattedDateNacimiento = utility.formatFromStringToDateDescriptive(element.fechaNacimiento);
-        const formattedDateLicencia = utility.formatFromStringToDateDescriptive(element.vencimientoLicencia);
+        const formattedDateNacimiento = utility.formatFromStringToDateDescriptive(element.fechaNacimiento.toString().split('T')[0]);
+        const formattedDateLicencia = utility.formatFromStringToDateDescriptive(element.vencimientoLicencia.toString().split('T')[0]);
         element.formattedDateNacimiento = formattedDateNacimiento;
         element.formattedDateLicencia = formattedDateLicencia;
       });

@@ -18,8 +18,8 @@ export class ConsumoService {
     this.appControllerUrl = environment.appControllerUrl;
   }
 
-  public saveVehiculoConsumo(vehiculoConsumo: VehiculoConsumo) {
-    return this.http.post<VehiculoConsumo>(this.appControllerUrl + "vehiculo/consumo", vehiculoConsumo, { headers: { "Content-Type": "application/json" } });
+  public saveVehiculoConsumo(vehiculoConsumo: VehiculoConsumo, modify: boolean = false) {
+    return this.http.post<VehiculoConsumo>(this.appControllerUrl + "vehiculo/consumo?modify=" + modify, vehiculoConsumo, { headers: { "Content-Type": "application/json" } });
   }
 
   public async getVehiculosConsumos(filtro: Filtro): Promise<VehiculoConsumo[]> {

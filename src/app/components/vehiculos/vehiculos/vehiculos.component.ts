@@ -5,11 +5,14 @@ import { Sucursal } from '../../../models/Sucursal';
 import { UtilityService } from '../../../services/utility/utility.service';
 import { Chofer } from '../../../models/Chofer';
 import { ChoferService } from '../../../services/chofer/chofer.service';
+import { MessageService } from 'primeng/api';
+import { utility } from '../../../utility/utility';
 
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
-  styleUrl: './vehiculos.component.css'
+  styleUrl: './vehiculos.component.css',
+  providers: [MessageService]
 })
 export class VehiculosComponent {
 
@@ -23,9 +26,9 @@ export class VehiculosComponent {
 
   vehiculos: Vehiculo[] = [];
   cols: any[] = [
+    { field: 'numEconomico', header: 'Número económico', type: 'string' }, //
     { field: 'choferDTO', subfield: 'nombre', header: 'Chofer', type: 'string' }, //
     { field: 'sucursalDTO', subfield: 'sucursal', header: 'Sucursal', type: 'string' }, //
-    { field: 'numEconomico', header: 'Número económico', type: 'string' }, //
     { field: 'kilometraje', header: 'Kilometraje', type: 'string' }, //
     { field: 'placas', header: 'Placas', type: 'string' }, //
     /*{ field: 'estadoPlacas', header: '', type: 'string' }, //
@@ -43,7 +46,13 @@ export class VehiculosComponent {
   vehiculoDialogVisible: boolean = false;
   saveVehiculoModel: Vehiculo = new Vehiculo;
 
-  constructor(private vehiculoService: VehiculoService, private choferesService: ChoferService, private utilityService: UtilityService) {
+  constructor(
+    private vehiculoService: VehiculoService, 
+    private choferesService: ChoferService, 
+    private utilityService: UtilityService,
+    private messageService: MessageService
+    ) 
+  {
 
   }
 
@@ -56,21 +65,31 @@ export class VehiculosComponent {
   saveVehiculo(): void {
     this.saveVehiculoModel.choferDTO.idChofer = this.selectedChofer.idChofer;
     this.saveVehiculoModel.sucursalDTO.idSucursal = this.selectedSucursal.idSucursal;
+    this.saveVehiculoModel.vencimientoPoliza = new Date(this.saveVehiculoModel.vencimientoPolizaString);
+
+     // validate dates
+     if(!utility.validateDate(this.saveVehiculoModel.vencimientoPoliza, this.messageService)) {
+      return;
+    }
+
     this.vehiculoService.saveVehiculo(this.saveVehiculoModel).subscribe(
       (data: any) => {
         // success
+        this.messageService.add({ severity: 'success', sticky: true, summary: 'Éxito', detail: 'Vehículo guardado.' });
         this.addVehiculoSidebarVisible = false;
-        this.saveVehiculoModel = new Vehiculo;
+        this.saveVehiculoModel = new Vehiculo();
         this.getVehiculos();
       },
       (error: any) => {
-        //error
+        this.messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: error.error.message });
+        this.saveVehiculoModel = new Vehiculo();
       }
     )
   }
 
   editVehiculo(vehiculo: Vehiculo): void {
     this.saveVehiculoModel = vehiculo;
+    this.saveVehiculoModel.vencimientoPolizaString = this.saveVehiculoModel.vencimientoPoliza.toString().split('T')[0];
 
     const foundChofer = this.choferes.find(chofer => chofer.idChofer == vehiculo.choferIdChofer);
     const foundSucursal = this.sucursales.find(sucursal => sucursal.sucursal = vehiculo.sucursalDTO.sucursal);

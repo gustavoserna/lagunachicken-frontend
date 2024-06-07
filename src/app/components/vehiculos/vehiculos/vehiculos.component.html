@@ -1,6 +1,7 @@
 <app-botonera></app-botonera>
 
 <p-panel styleClass="main-panel">
+    <p-toast></p-toast>
     <p-button label="Agregar vehículo" [rounded]="true" [raised]="true" severity="secondary"
         (click)="addVehiculoSidebarVisible=true"></p-button><br><br>
 
@@ -223,7 +224,7 @@
                         </span><br>
 
                         <label for="vencimientoPoliza">Vencimiento de la Póliza</label>
-                        <input class="native-date-picker" id="vencimientoPoliza" name="vencimientoPoliza" [(ngModel)]="saveVehiculoModel.vencimientoPoliza" type="date" />
+                        <input class="native-date-picker" id="vencimientoPoliza" name="vencimientoPoliza" [(ngModel)]="saveVehiculoModel.vencimientoPolizaString" type="date" />
                         <br>
                     </p-accordionTab>
                 </p-accordion><br>

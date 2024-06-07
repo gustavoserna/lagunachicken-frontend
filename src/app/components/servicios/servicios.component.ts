@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { Servicio } from '../../models/Servicio';
 import { UtilityService } from '../../services/utility/utility.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-servicios',
   templateUrl: './servicios.component.html',
-  styleUrl: './servicios.component.css'
+  styleUrl: './servicios.component.css',
+  providers: [MessageService]
 })
 export class ServiciosComponent {
 
@@ -16,7 +18,7 @@ export class ServiciosComponent {
   addServicioSidebarVisible: boolean = false;
   saveServicioModel: Servicio = new Servicio;
 
-  constructor(private utilirtService: UtilityService) {
+  constructor(private utilirtService: UtilityService, private messageService: MessageService) {
     this.getServicios();
   }
 
@@ -24,14 +26,21 @@ export class ServiciosComponent {
     this.utilirtService.saveServicio(this.saveServicioModel).subscribe(
       (data: any) => {
         // success
+        this.messageService.add({ severity: 'success', sticky: true, summary: 'Éxito', detail: 'Servicio guardado.' });
         this.addServicioSidebarVisible = false;
         this.saveServicioModel = new Servicio;
         this.getServicios();
       },
       (error: any) => {
-        //error
+        this.messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: error.error.message });
       }
     )
+  }
+  
+  editServicio(servicio: Servicio): void {
+    this.saveServicioModel = servicio;
+
+    this.addServicioSidebarVisible = true;
   }
 
   private getServicios(): void {

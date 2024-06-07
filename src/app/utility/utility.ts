@@ -1,30 +1,26 @@
 import { addDays } from 'date-fns';
 import { format, toZonedTime } from 'date-fns-tz';
-import { es } from 'date-fns/locale';
+import { da, es } from 'date-fns/locale';
+import { MessageService } from 'primeng/api';
+import { Message } from 'primeng/api/message';
 
 export class utility {
 
-    static formatFromStringToDate (date: Date) :string {
+    static formatFromStringToDate (date: string) :string {
         const mexicoTimeZone = 'America/Mexico_City';
 
-        // se suma un dia por el error que hay en la fecha, selecciona un dia menos
-        const nextDay = addDays(date, 1);
-
         // Convertir la fecha a la zona horaria de México
-        const zonedDate = toZonedTime(nextDay, mexicoTimeZone);
+        const zonedDate = toZonedTime(date, mexicoTimeZone);
 
         const formattedDate = format(zonedDate, 'dd/MM/yyyy', { locale: es });
         return formattedDate;
     }
 
-    static formatFromStringToDateDescriptive (date: Date) :string {
+    static formatFromStringToDateDescriptive (date: string) :string {
         const mexicoTimeZone = 'America/Mexico_City';
 
-        // se suma un dia por el error que hay en la fecha, selecciona un dia menos
-        const nextDay = addDays(date, 1);
-
         // Convertir la fecha a la zona horaria de México
-        const zonedDate = toZonedTime(nextDay, mexicoTimeZone);
+        const zonedDate = toZonedTime(date, mexicoTimeZone);
 
         const formattedDate = format(zonedDate, "dd 'de' MMMM 'del' yyyy", { locale: es });
         return formattedDate;
@@ -52,6 +48,25 @@ export class utility {
         const rearrangedDate = `${parts[1]}/${parts[0]}/${parts[2]}`;
         
         return rearrangedDate;
+    }
+
+    static convertToDayMonthYearFormatHifen(dateString: string): string {
+        // Split the date string into day, month, and year parts
+        const parts = dateString.split('-');
+        
+        // Rearrange the parts to mm/dd/yyyy format
+        const rearrangedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
+        
+        return rearrangedDate;
+    }
+
+    static validateDate(date: Date, messageService: MessageService): boolean {
+        if(isNaN(date.getTime())) {
+            messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: 'Por favor completa todas las fechas.' });
+            return false;
+        }
+        
+        return true;
     }
 
 }

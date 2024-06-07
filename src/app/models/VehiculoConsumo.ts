@@ -13,6 +13,7 @@ export class VehiculoConsumo {
     estacionDTO: Estacion = new Estacion;
     productoDTO: Producto = new Producto;
     fechaConsumo: Date;
+    fechaConsumoString: string;
     formattedDate: string | undefined;
     horaConsumoJson: Hora = new Hora;
     horaConsumo: string = "";

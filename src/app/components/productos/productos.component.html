@@ -1,6 +1,7 @@
 <app-botonera></app-botonera>
 
 <p-panel styleClass="main-panel">
+    <p-toast></p-toast>
     <p-button label="Agregar producto" [rounded]="true" [raised]="true" severity="secondary" (click)="addProductoSidebarVisible=true"></p-button><br><br>
 
     <p-table [value]="productos" [columns]="cols" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
@@ -10,6 +11,7 @@
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
+                <th style="width: 4rem"></th>
             </tr>
         </ng-template>
 
@@ -23,6 +25,10 @@
                     <ng-template #normal_content>
                         {{rowData[col.field]}}
                     </ng-template>
+                </td>
+                <td style="text-align: center">
+                    <button pButton type="button" class="p-button-secondary" icon="pi pi-pencil"
+                        (click)="editProducto(rowData)"></button>
                 </td>
             </tr>
         </ng-template>

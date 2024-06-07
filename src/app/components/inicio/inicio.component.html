@@ -7,7 +7,8 @@
                 <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
                     <div fxFlex="50%">
                         <p-calendar id="filtroFechaDe" name="filtroFechaDe" [(ngModel)]="filtro.fechaDesde"
-                            placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy"></p-calendar>
+                            placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}"
+                            dateFormat="dd/mm/yy"></p-calendar>
 
                         <!--<p-dropdown [options]="choferes" [(ngModel)]="selectedChofer" [ngModelOptions]="{standalone: true}"
                             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="false"
@@ -39,18 +40,26 @@
                     class="right-aligned borrar-filtros" type="button" (click)="filtrar(true)"></p-button>
             </p-panel><br>
 
-            <!-- charts -->
-            <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
-                <div fxFlex="50%">
-                    <!-- chart costos -->
-                    <p-chart type="bar" [data]="costosTable" [options]="options"></p-chart>
+            <!-- charts servicios dialog -->
+            <p-button (click)="displayServiciosChartsDialog = true" icon="pi pi-external-link" label="Abrir graficas" styleClass="full-width"></p-button><br><br>
+            <p-dialog header="Gráficas de servicios" [(visible)]="displayServiciosChartsDialog" [modal]="true" [style]="{ 'width': '100%', 'height': '100%', 'max-width': '100%', 'max-height': '100%' }"
+                [maximizable]="false" [draggable]="false" [resizable]="false">
+                <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
+                    <div fxFlex="50%">
+                        <!-- chart costos -->
+                        <p-chart type="bar" [data]="costosTable" [options]="options"></p-chart>
+                    </div>
+    
+                    <div fxFlex="50%">
+                        <!-- chart incidencias -->
+                        <p-chart type="bar" [data]="incidenciasTable" [options]="options"></p-chart><br>
+                    </div>
                 </div>
-
-                <div fxFlex="50%">
-                    <!-- chart incidencias -->
-                    <p-chart type="bar" [data]="incidenciasTable" [options]="options"></p-chart><br>
-                </div>
-            </div>
+                <ng-template pTemplate="footer">
+                    <p-button icon="pi pi-check" (click)="displayServiciosChartsDialog=false" label="Ok"
+                        styleClass="p-button-text"></p-button>
+                </ng-template>
+            </p-dialog>
 
             <!-- tabla servicio -->
             <p-table #serviciosTable [value]="serviciosTabla" [columns]="cols" [paginator]="true" [rows]="10"
@@ -82,7 +91,8 @@
                 </ng-template>
 
                 <ng-template pTemplate="paginatorright">
-                    <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download" (click)="exportToCSV(serviciosTable.columns, serviciosTable.value)"></p-button>
+                    <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
+                        (click)="exportToCSV(serviciosTable.columns, serviciosTable.value)"></p-button>
                 </ng-template>
             </p-table>
         </p-panel>
@@ -93,8 +103,9 @@
             <p-panel header="Filtros">
                 <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
                     <div fxFlex="50%">
-                        <p-calendar id="filtroFechaDeConsumo" name="filtroFechaDeConsumo" [(ngModel)]="filtroConsumo.fechaDesde"
-                            placeholder="Fecha desde" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy"></p-calendar>
+                        <p-calendar id="filtroFechaDeConsumo" name="filtroFechaDeConsumo"
+                            [(ngModel)]="filtroConsumo.fechaDesde" placeholder="Fecha desde"
+                            [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy"></p-calendar>
 
                         <!--<p-dropdown [options]="choferes" [(ngModel)]="selectedChofer" [ngModelOptions]="{standalone: true}"
                             optionLabel="nombre" [filter]="true" filterBy="nombre" [showClear]="false"
@@ -102,14 +113,15 @@
                         </p-dropdown>-->
                         <p-dropdown [options]="vehiculosConsumo" [(ngModel)]="selectedVehiculoConsumo"
                             [ngModelOptions]="{standalone: true}" optionLabel="numEconomico" [filter]="true"
-                            filterBy="numEconomico" [showClear]="false" placeholder="Filtrar por vehículo" autoWidth="false"
-                            [style]="{'width':'100%', 'margin-bottom':'10px'}">
+                            filterBy="numEconomico" [showClear]="false" placeholder="Filtrar por vehículo"
+                            autoWidth="false" [style]="{'width':'100%', 'margin-bottom':'10px'}">
                         </p-dropdown>
                     </div>
 
                     <div fxFlex="50%">
-                        <p-calendar id="filtroFechaHastaConsumo" name="filtroFechaHastaConsumo" [(ngModel)]="filtroConsumo.fechaHasta"
-                            placeholder="Fecha hasta" [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy">
+                        <p-calendar id="filtroFechaHastaConsumo" name="filtroFechaHastaConsumo"
+                            [(ngModel)]="filtroConsumo.fechaHasta" placeholder="Fecha hasta"
+                            [style]="{'margin-bottom':'10px'}" dateFormat="dd/mm/yy">
                         </p-calendar>
 
                         <p-dropdown [options]="productosConsumo" [(ngModel)]="selectedProductoConsumo"
@@ -126,31 +138,43 @@
                     class="right-aligned borrar-filtros" type="button" (click)="filtrarConsumo(true)"></p-button>
             </p-panel><br>
 
-            <!-- charts -->
-            <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
-                <div fxFlex="33%">
-                    <!-- chart costos -->
-                    <p-chart type="bar" [data]="costosConsumoTable" [options]="options"></p-chart>
+            <!-- charts consumos dialog -->
+            <p-button (click)="displayConsumosChartsDialog = true" icon="pi pi-external-link" label="Abrir graficas" styleClass="full-width"></p-button><br><br>
+            <p-dialog header="Gráficas de consumos" [(visible)]="displayConsumosChartsDialog" [modal]="true" [style]="{ 'width': '100%', 'height': '100%', 'max-width': '100%', 'max-height': '100%' }"
+                [maximizable]="false" [draggable]="false" [resizable]="false">
+                <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
+                    <div fxFlex="50%">
+                        <!-- chart costos -->
+                        <p-chart type="bar" [data]="costosConsumoTable" [options]="options"></p-chart>
+                    </div>
+    
+                    <div fxFlex="50%">
+                        <!-- chart rendimientos promedio -->
+                        <p-chart type="bar" [data]="rendimientosPromediosTable" [options]="options"></p-chart><br>
+                    </div>
                 </div>
 
-                <div fxFlex="33%">
-                    <!-- chart rendimientos promedio -->
-                    <p-chart type="bar" [data]="rendimientosPromediosTable" [options]="options"></p-chart><br>
+                <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
+                    <div fxFlex="50%">
+                        <!-- chart incidencias productos -->
+                        <p-chart type="bar" [data]="incidenciasProductoConsumoTable" [options]="options"></p-chart><br>
+                    </div>
                 </div>
-
-                <div fxFlex="33%">
-                    <!-- chart incidencias productos -->
-                    <p-chart type="bar" [data]="incidenciasProductoConsumoTable" [options]="options"></p-chart><br>
-                </div>
-            </div>
+                <ng-template pTemplate="footer">
+                    <p-button icon="pi pi-check" (click)="displayConsumosChartsDialog=false" label="Ok"
+                        styleClass="p-button-text"></p-button>
+                </ng-template>
+            </p-dialog>
 
             <!-- tabla consumo -->
-            <p-table #consumosTable [value]="consumosTabla" [columns]="colsConsumos" [paginator]="true" [rows]="10"
+            <p-table #consumosTable [value]="consumosTabla" [columns]="colsConsumos"  [sortField]="selectedColumn" [sortOrder]="sortOrder" [paginator]="true" [rows]="10"
                 [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th *ngFor="let col of columns">
+                        <th *ngFor="let col of columns"
+                            [pSortableColumn]="col.field"> <!-- Add pSortableColumn directive -->
                             {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
                     </tr>
                 </ng-template>
@@ -174,7 +198,8 @@
                 </ng-template>
 
                 <ng-template pTemplate="paginatorright">
-                    <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download" (click)="exportToCSV(consumosTable.columns, consumosTable.value)"></p-button>
+                    <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
+                        (click)="exportToCSV(consumosTable.columns, consumosTable.value)"></p-button>
                 </ng-template>
             </p-table>
         </p-panel>

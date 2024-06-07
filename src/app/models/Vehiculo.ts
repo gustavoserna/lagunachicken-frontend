@@ -23,5 +23,6 @@ export class Vehiculo {
     numeroPoliza: string = "";
     aseguradora: string = "";
     vencimientoPoliza: Date = new Date;
+    vencimientoPolizaString: string = "";
 
 }

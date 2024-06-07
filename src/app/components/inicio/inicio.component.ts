@@ -18,6 +18,7 @@ import { ConsumoService } from '../../services/consumo/consumo.service';
 import { CostoConsumos } from '../../models/CostoConsumos';
 import { Table } from 'primeng/table';
 import { Papa } from 'ngx-papaparse';
+import { utility } from '../../utility/utility';
 
 @Component({
   selector: 'app-inicio',
@@ -25,6 +26,10 @@ import { Papa } from 'ngx-papaparse';
   styleUrl: './inicio.component.css'
 })
 export class InicioComponent {
+
+  //dialogs
+  displayConsumosChartsDialog: boolean = false;
+  displayServiciosChartsDialog: boolean = false;
 
   // ---- filtros ----
   //servicios
@@ -58,6 +63,8 @@ export class InicioComponent {
   rendimientosPromediosTable: any;
   incidenciasConsumoTable: any;
   incidenciasProductoConsumoTable: any;
+  selectedColumn: string; // Columna seleccionada para el ordenamiento
+  sortOrder: number = 1; // Dirección del ordenamiento: 1 para ascendente, -1 para descendente
 
   // tabla servicios
   serviciosTabla: VehiculoServicio[] = [];
@@ -86,7 +93,7 @@ export class InicioComponent {
     { field: 'odometro', header: 'Odómetro', type: 'string' },
     { field: 'rendimiento', header: 'Rendimiento', type: 'string' },
     { field: 'recorrido', header: 'Recorrido', type: 'string' },
-    { field: 'formattedDate', header: 'Fecha consumo', type: 'string' },
+    { field: 'fechaConsumoString', header: 'Fecha consumo', type: 'string' },
   ];
 
   constructor(
@@ -115,6 +122,7 @@ export class InicioComponent {
         }]
       }
     };
+
     // general
     this.getVehiculos();
     this.getServicios();
@@ -130,6 +138,12 @@ export class InicioComponent {
     this.getCostoConsumos(new Filtro);
     this.getIncidenciasProductos(new Filtro);
     this.getRendimientosPromedio(new Filtro);
+  }
+
+  // Método para cambiar la columna seleccionada y la dirección del ordenamiento
+  onSort(event: any) {
+    this.selectedColumn = event.field;
+    this.sortOrder = event.order;
   }
 
   public filtrar(borrarFiltros?: boolean): void {
@@ -299,8 +313,7 @@ export class InicioComponent {
   private getVehiculosServicios(filtro: Filtro): void {
     this.servicioService.getVehiculosServicios(filtro).then(data => {
       data.forEach(element => {
-        const fecha = new Date(element.fechaServicio!);
-        element.formattedDate = format(fecha, "dd 'de' MMMM 'del' yyyy", { locale: es });
+        element.formattedDate = utility.formatFromStringToDateDescriptive(element.fechaServicio.toString().split('T')[0]);
       });
       this.serviciosTabla = data;
     });
@@ -309,8 +322,9 @@ export class InicioComponent {
   private getVehiculosConsumos(filtro: Filtro): void {
     this.consumoService.getVehiculosConsumos(filtro).then(data => {
       data.forEach(element => {
-        const fecha = new Date(element.fechaConsumo!);
-        element.formattedDate = format(fecha, "dd 'de' MMMM 'del' yyyy", { locale: es });
+        element.fechaConsumoString = utility.convertToDayMonthYearFormatHifen(element.fechaConsumo.toString().split('T')[0]);
+        element.formattedDate = utility.formatFromStringToDateDescriptive(element.fechaConsumo.toString().split('T')[0]);
+        element.monto = Number(element.monto).toFixed(2).toString();
       });
       this.consumosTabla = data;
     });

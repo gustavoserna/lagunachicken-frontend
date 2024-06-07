@@ -19,6 +19,7 @@ import { Dropdown } from 'primeng/dropdown';
 import { Papa } from 'ngx-papaparse';
 import { Message, MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-registro-consumo',
@@ -32,6 +33,12 @@ export class RegistroConsumoComponent {
 
   messages: Message[] = [];
 
+  // --- tables ----
+  //consumos
+  @ViewChild('consumosTable') consumosTable!: Table;
+  selectedColumn: string; // Columna seleccionada para el ordenamiento
+  sortOrder: number = 1; // Dirección del ordenamiento: 1 para ascendente, -1 para descendente
+
   //filtros
   filtroConsumo: Filtro = new Filtro;
   vehiculosConsumo: Vehiculo[] = [];
@@ -41,7 +48,8 @@ export class RegistroConsumoComponent {
   productosConsumo: Producto[] = [];
   selectedProductoConsumo: Producto = new Producto;
 
-  // form registrar servicio
+  // form registrar consumo
+  modifyConsumo: boolean = false;
   saveConsumoModel: VehiculoConsumo = new VehiculoConsumo;
   vehiculos: Vehiculo[] = [];
   estaciones: Estacion[] = [];
@@ -65,7 +73,7 @@ export class RegistroConsumoComponent {
     { field: 'odometro', header: 'Odómetro', type: 'string' },
     { field: 'rendimiento', header: 'Rendimiento', type: 'string' },
     { field: 'recorrido', header: 'Recorrido', type: 'string' },
-    { field: 'formattedDate', header: 'Fecha consumo', type: 'string' },
+    { field: 'fechaConsumoString', header: 'Fecha consumo', type: 'string' },
   ];
   addConsumoSidebarVisible: boolean = false;
 
@@ -81,6 +89,12 @@ export class RegistroConsumoComponent {
     this.getVehiculos();
     this.getEstaciones();
     this.getProductos();
+  }
+
+  // Método para cambiar la columna seleccionada y la dirección del ordenamiento
+  onSort(event: any) {
+    this.selectedColumn = event.field;
+    this.sortOrder = event.order;
   }
 
   handleCsvUpload(event: any) {
@@ -191,35 +205,46 @@ export class RegistroConsumoComponent {
     this.saveConsumoModel.productoIdProducto = this.saveConsumoModel.productoDTO.idProducto;
     this.saveConsumoModel.monto = "0"; // el monto se calcula en el backend
     this.saveConsumoModel.horaConsumo = this.saveConsumoModel.horaConsumoJson.horaConsumo;
+    this.saveConsumoModel.fechaConsumo = new Date(this.saveConsumoModel.fechaConsumoString);
 
-    this.consumoService.saveVehiculoConsumo(this.saveConsumoModel).subscribe(
+    // validate dates
+    if (!utility.validateDate(this.saveConsumoModel.fechaConsumo, this.messageService)) {
+      return;
+    }
+
+    this.consumoService.saveVehiculoConsumo(this.saveConsumoModel, this.modifyConsumo).subscribe(
       (data: any) => {
         // success
         this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Consumo guardado para el vehículo ' + this.saveConsumoModel.vehiculoDTO.numEconomico });
         this.addConsumoSidebarVisible = false;
         this.saveConsumoModel = new VehiculoConsumo;
         this.getVehiculosConsumos(new Filtro);
+        this.modifyConsumo = false;
       },
       (error: any) => {
         //error
         this.messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: error.error.message });
+        this.saveConsumoModel = new VehiculoConsumo();
+        this.modifyConsumo = false;
       }
     )
   }
 
   editConsumo(vehiculoConsumo: VehiculoConsumo): void {
     this.saveConsumoModel = vehiculoConsumo;
+    this.saveConsumoModel.fechaConsumoString = this.saveConsumoModel.fechaConsumo.toString().split('T')[0];
 
     const horaConsumo = new Hora();
     horaConsumo.horaConsumo = vehiculoConsumo.horaConsumo;
 
-    const formattedDate = new Date(utility.formatFromStringToDate(vehiculoConsumo.fechaConsumo));
+    const formattedDate = new Date(utility.formatFromStringToDate(vehiculoConsumo.fechaConsumo.toString().split('T')[0]));
     this.saveConsumoModel.fechaConsumo = formattedDate;
     this.saveConsumoModel.horaConsumoJson = horaConsumo;
 
     const foundVehiculo = this.vehiculos.find(vehiculo => vehiculo.numEconomico == vehiculoConsumo.vehiculoDTO!.numEconomico);
     this.saveConsumoModel.vehiculoDTO = foundVehiculo;
 
+    this.modifyConsumo = true;
     this.addConsumoSidebarVisible = true;
   }
 
@@ -273,7 +298,9 @@ export class RegistroConsumoComponent {
   private getVehiculosConsumos(filtro: Filtro): void {
     this.consumoService.getVehiculosConsumos(this.filtroConsumo).then(data => {
       data.forEach(element => {
-        element.formattedDate = utility.formatFromStringToDateDescriptive(element.fechaConsumo);
+        element.fechaConsumoString = utility.convertToDayMonthYearFormatHifen(element.fechaConsumo.toString().split('T')[0]);
+        element.formattedDate = utility.formatFromStringToDateDescriptive(element.fechaConsumo.toString().split('T')[0]);
+        element.monto = Number(element.monto).toFixed(2).toString();
       });
       this.consumos = data;
     });

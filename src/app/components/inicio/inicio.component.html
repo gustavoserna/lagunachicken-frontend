@@ -41,15 +41,17 @@
             </p-panel><br>
 
             <!-- charts servicios dialog -->
-            <p-button (click)="displayServiciosChartsDialog = true" icon="pi pi-external-link" label="Abrir graficas" styleClass="full-width"></p-button><br><br>
-            <p-dialog header="Gráficas de servicios" [(visible)]="displayServiciosChartsDialog" [modal]="true" [style]="{ 'width': '100%', 'height': '100%', 'max-width': '100%', 'max-height': '100%' }"
+            <p-button (click)="displayServiciosChartsDialog = true" icon="pi pi-external-link" label="Abrir graficas"
+                styleClass="full-width"></p-button><br><br>
+            <p-dialog header="Gráficas de servicios" [(visible)]="displayServiciosChartsDialog" [modal]="true"
+                [style]="{ 'width': '100%', 'height': '100%', 'max-width': '100%', 'max-height': '100%' }"
                 [maximizable]="false" [draggable]="false" [resizable]="false">
                 <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
                     <div fxFlex="50%">
                         <!-- chart costos -->
                         <p-chart type="bar" [data]="costosTable" [options]="options"></p-chart>
                     </div>
-    
+
                     <div fxFlex="50%">
                         <!-- chart incidencias -->
                         <p-chart type="bar" [data]="incidenciasTable" [options]="options"></p-chart><br>
@@ -62,39 +64,42 @@
             </p-dialog>
 
             <!-- tabla servicio -->
-            <p-table #serviciosTable [value]="serviciosTabla" [columns]="cols" [paginator]="true" [rows]="10"
-                [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
-                <ng-template pTemplate="header" let-columns>
-                    <tr>
-                        <th *ngFor="let col of columns">
-                            {{col.header}}
-                        </th>
-                    </tr>
-                </ng-template>
+            <div class="table-container">
+                <p-table #serviciosTable [value]="serviciosTabla" [columns]="cols" [paginator]="true" [rows]="10"
+                    [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]" [loading]="loadingServicios">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                    </ng-template>
 
-                <ng-template pTemplate="body" let-rowData let-columns="columns">
-                    <tr>
-                        <td *ngFor="let col of columns">
-                            <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
-                            <ng-template #nested_object_content>
-                                {{rowData[col.field][col.subfield]}}
-                            </ng-template>
-                            <ng-template #normal_content>
-                                {{rowData[col.field]}}
-                            </ng-template>
-                        </td>
-                    </tr>
-                </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td *ngFor="let col of columns">
+                                <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                                <ng-template #nested_object_content>
+                                    {{rowData[col.field][col.subfield]}}
+                                </ng-template>
+                                <ng-template #normal_content>
+                                    {{rowData[col.field]}}
+                                </ng-template>
+                            </td>
+                        </tr>
+                    </ng-template>
 
-                <ng-template pTemplate="paginatorleft">
-                    <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
-                </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+                    </ng-template>
 
-                <ng-template pTemplate="paginatorright">
-                    <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
-                        (click)="exportToCSV(serviciosTable.columns, serviciosTable.value)"></p-button>
-                </ng-template>
-            </p-table>
+                    <ng-template pTemplate="paginatorright">
+                        <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
+                            (click)="exportToCSV(serviciosTable.columns, serviciosTable.value)"></p-button>
+                    </ng-template>
+                </p-table>
+                <p-progressSpinner *ngIf="loadingServicios"></p-progressSpinner>
+            </div>
         </p-panel>
     </p-tabPanel>
 
@@ -139,15 +144,17 @@
             </p-panel><br>
 
             <!-- charts consumos dialog -->
-            <p-button (click)="displayConsumosChartsDialog = true" icon="pi pi-external-link" label="Abrir graficas" styleClass="full-width"></p-button><br><br>
-            <p-dialog header="Gráficas de consumos" [(visible)]="displayConsumosChartsDialog" [modal]="true" [style]="{ 'width': '100%', 'height': '100%', 'max-width': '100%', 'max-height': '100%' }"
+            <p-button (click)="displayConsumosChartsDialog = true" icon="pi pi-external-link" label="Abrir graficas"
+                styleClass="full-width"></p-button><br><br>
+            <p-dialog header="Gráficas de consumos" [(visible)]="displayConsumosChartsDialog" [modal]="true"
+                [style]="{ 'width': '100%', 'height': '100%', 'max-width': '100%', 'max-height': '100%' }"
                 [maximizable]="false" [draggable]="false" [resizable]="false">
                 <div fxLayout="row" fxLayoutGap="10px" [style]="{'margin-bottom':'10px'}">
                     <div fxFlex="50%">
                         <!-- chart costos -->
                         <p-chart type="bar" [data]="costosConsumoTable" [options]="options"></p-chart>
                     </div>
-    
+
                     <div fxFlex="50%">
                         <!-- chart rendimientos promedio -->
                         <p-chart type="bar" [data]="rendimientosPromediosTable" [options]="options"></p-chart><br>
@@ -167,41 +174,46 @@
             </p-dialog>
 
             <!-- tabla consumo -->
-            <p-table #consumosTable [value]="consumosTabla" [columns]="colsConsumos"  [sortField]="selectedColumn" [sortOrder]="sortOrder" [paginator]="true" [rows]="10"
-                [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
-                <ng-template pTemplate="header" let-columns>
-                    <tr>
-                        <th *ngFor="let col of columns"
-                            [pSortableColumn]="col.field"> <!-- Add pSortableColumn directive -->
-                            {{col.header}}
-                            <p-sortIcon [field]="col.field"></p-sortIcon>
-                        </th>
-                    </tr>
-                </ng-template>
+            <div class="table-container">
+                <p-table #consumosTable [value]="consumosTabla" [columns]="colsConsumos" [sortField]="selectedColumn"
+                    [sortOrder]="sortOrder" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                    responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]" [loading]="loadingConsumos">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                <!-- Add pSortableColumn directive -->
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                        </tr>
+                    </ng-template>
 
-                <ng-template pTemplate="body" let-rowData let-columns="columns">
-                    <tr>
-                        <td *ngFor="let col of columns">
-                            <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
-                            <ng-template #nested_object_content>
-                                {{rowData[col.field][col.subfield]}}
-                            </ng-template>
-                            <ng-template #normal_content>
-                                {{rowData[col.field]}}
-                            </ng-template>
-                        </td>
-                    </tr>
-                </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td *ngFor="let col of columns">
+                                <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                                <ng-template #nested_object_content>
+                                    {{rowData[col.field][col.subfield]}}
+                                </ng-template>
+                                <ng-template #normal_content>
+                                    {{rowData[col.field]}}
+                                </ng-template>
+                            </td>
+                        </tr>
+                    </ng-template>
 
-                <ng-template pTemplate="paginatorleft">
-                    <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
-                </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+                    </ng-template>
 
-                <ng-template pTemplate="paginatorright">
-                    <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
-                        (click)="exportToCSV(consumosTable.columns, consumosTable.value)"></p-button>
-                </ng-template>
-            </p-table>
+                    <ng-template pTemplate="paginatorright">
+                        <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
+                            (click)="exportToCSV(consumosTable.columns, consumosTable.value)"></p-button>
+                    </ng-template>
+                </p-table>
+                <p-progressSpinner *ngIf="loadingConsumos"></p-progressSpinner>
+            </div>
+
         </p-panel>
     </p-tabPanel>
 </p-tabView>

@@ -54,8 +54,8 @@ export class utility {
         // Split the date string into day, month, and year parts
         const parts = dateString.split('-');
         
-        // Rearrange the parts to mm/dd/yyyy format
-        const rearrangedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
+        // Rearrange the parts to dd/mm/yyyy format
+        const rearrangedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
         
         return rearrangedDate;
     }

@@ -35,7 +35,7 @@ export class VehiculoService {
 
   public saveVehiculoServicio(file: File, vehiculoServicio: VehiculoServicio): Observable<any> {
     const formData: FormData = new FormData();
-    if (file !== undefined) {
+    if (file !== undefined && file !== null) {
       formData.append('file', file, file.name);
     }
 

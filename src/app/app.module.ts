@@ -50,6 +50,8 @@ import { ProveedoresComponent } from './components/proveedores/proveedores.compo
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import {ToastModule} from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 
 
 @NgModule({
@@ -98,7 +100,8 @@ import {ToastModule} from 'primeng/toast';
     OverlayPanelModule,
     MessageModule,
     MessagesModule,
-    ToastModule
+    ToastModule,
+    ProgressSpinnerModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

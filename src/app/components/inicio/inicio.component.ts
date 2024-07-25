@@ -53,11 +53,13 @@ export class InicioComponent {
 
   // --- tables ----
   //servicios
+  loadingServicios: boolean = false;
   @ViewChild('serviciosTable') serviciosTable!: Table;
   costosTable: any;
   incidenciasTable: any;
   options: any;
   //consumos
+  loadingConsumos: boolean = false;
   @ViewChild('consumosTable') consumosTable!: Table;
   costosConsumoTable: any;
   rendimientosPromediosTable: any;
@@ -311,15 +313,21 @@ export class InicioComponent {
   }
 
   private getVehiculosServicios(filtro: Filtro): void {
+    this.loadingServicios = true;
+
     this.servicioService.getVehiculosServicios(filtro).then(data => {
       data.forEach(element => {
         element.formattedDate = utility.formatFromStringToDateDescriptive(element.fechaServicio.toString().split('T')[0]);
       });
       this.serviciosTabla = data;
+    }).finally(() => {
+      this.loadingServicios = false;
     });
   }
 
   private getVehiculosConsumos(filtro: Filtro): void {
+    this.loadingConsumos = true;
+
     this.consumoService.getVehiculosConsumos(filtro).then(data => {
       data.forEach(element => {
         element.fechaConsumoString = utility.convertToDayMonthYearFormatHifen(element.fechaConsumo.toString().split('T')[0]);
@@ -327,6 +335,8 @@ export class InicioComponent {
         element.monto = Number(element.monto).toFixed(2).toString();
       });
       this.consumosTabla = data;
+    }).finally(() => {
+      this.loadingConsumos = false;
     });
   }
 

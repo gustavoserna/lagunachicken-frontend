@@ -36,8 +36,9 @@ export class RegistroConsumoComponent {
   // --- tables ----
   //consumos
   @ViewChild('consumosTable') consumosTable!: Table;
+  loading: boolean = false;
   selectedColumn: string; // Columna seleccionada para el ordenamiento
-  sortOrder: number = 1; // Dirección del ordenamiento: 1 para ascendente, -1 para descendente
+  sortOrder: number = -1; // Dirección del ordenamiento: 1 para ascendente, -1 para descendente
 
   //filtros
   filtroConsumo: Filtro = new Filtro;
@@ -231,8 +232,11 @@ export class RegistroConsumoComponent {
   }
 
   editConsumo(vehiculoConsumo: VehiculoConsumo): void {
-    this.saveConsumoModel = vehiculoConsumo;
+    // Realizar una copia profunda de vehiculoConsumo
+    this.saveConsumoModel = JSON.parse(JSON.stringify(vehiculoConsumo));
+
     this.saveConsumoModel.fechaConsumoString = this.saveConsumoModel.fechaConsumo.toString().split('T')[0];
+    console.log(this.saveConsumoModel.fechaConsumoString)
 
     const horaConsumo = new Hora();
     horaConsumo.horaConsumo = vehiculoConsumo.horaConsumo;
@@ -296,6 +300,8 @@ export class RegistroConsumoComponent {
   }
 
   private getVehiculosConsumos(filtro: Filtro): void {
+    this.loading = true;
+
     this.consumoService.getVehiculosConsumos(this.filtroConsumo).then(data => {
       data.forEach(element => {
         element.fechaConsumoString = utility.convertToDayMonthYearFormatHifen(element.fechaConsumo.toString().split('T')[0]);
@@ -303,6 +309,8 @@ export class RegistroConsumoComponent {
         element.monto = Number(element.monto).toFixed(2).toString();
       });
       this.consumos = data;
+    }).finally(() => {
+      this.loading = false;
     });
   }
 

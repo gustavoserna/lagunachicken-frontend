@@ -3,7 +3,7 @@
 <p-panel styleClass="main-panel">
     <p-toast></p-toast>
     <p-button label="Registrar servicio" [rounded]="true" [raised]="true" severity="secondary"
-        (click)="addServicioSidebarVisible=true"></p-button><br><br>
+        (click)="openSidebar()"></p-button><br><br>
 
     <!-- filtros -->
     <p-panel header="Filtros">
@@ -37,43 +37,52 @@
 
 
     <!-- tabla -->
-    <p-table #serviciosTable [value]="servicios" [columns]="cols" [paginator]="true" [rows]="10"
-        [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]">
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-                <th *ngFor="let col of columns">
-                    {{col.header}}
-                </th>
-                <th style="width: 4rem"></th>
-            </tr>
-        </ng-template>
+    <div class="table-container">
+        <p-table #serviciosTable [value]="servicios" [columns]="cols" [paginator]="true" [rows]="10"
+            [showCurrentPageReport]="true" responsiveLayout="scroll" [rowsPerPageOptions]="[10,25,50]" [loading]="loading">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                    <th style="width: 4rem"></th>
+                    <th style="width: 4rem"></th>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="body" let-rowData let-columns="columns">
-            <tr>
-                <td *ngFor="let col of columns">
-                    <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
-                    <ng-template #nested_object_content>
-                        {{rowData[col.field][col.subfield]}}
-                    </ng-template>
-                    <ng-template #normal_content>
-                        {{rowData[col.field]}}
-                    </ng-template>
-                </td>
-                <td style="text-align: center">
-                    <button pButton type="button" class="p-button-secondary" icon="pi pi-cloud-download" (click)="downloadFile(rowData)"></button>
-                </td>
-            </tr>
-        </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr>
+                    <td *ngFor="let col of columns">
+                        <div *ngIf="col.subfield;then nested_object_content else normal_content"></div>
+                        <ng-template #nested_object_content>
+                            {{rowData[col.field][col.subfield]}}
+                        </ng-template>
+                        <ng-template #normal_content>
+                            {{rowData[col.field]}}
+                        </ng-template>
+                    </td>
+                    <td style="text-align: center">
+                        <button pButton type="button" class="p-button-secondary" icon="pi pi-pencil"
+                            (click)="editServicio(rowData)"></button>
+                    </td>
+                    <td style="text-align: center">
+                        <button pButton type="button" class="p-button-secondary" icon="pi pi-cloud-download"
+                            (click)="downloadFile(rowData)"></button>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="paginatorleft">
-            <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
-        </ng-template>
+            <ng-template pTemplate="paginatorleft">
+                <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+            </ng-template>
 
-        <ng-template pTemplate="paginatorright">
-            <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
-                (click)="exportToCSV(serviciosTable.columns, serviciosTable.value)"></p-button>
-        </ng-template>
-    </p-table>
+            <ng-template pTemplate="paginatorright">
+                <p-button type="button" styleClass="p-button-text" icon="pi pi-cloud-download"
+                    (click)="exportToCSV(serviciosTable.columns, serviciosTable.value)"></p-button>
+            </ng-template>
+        </p-table>
+        <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+    </div>
 
     <!-- add servicio panel -->
     <p-sidebar [(visible)]="addServicioSidebarVisible" position="right">
@@ -115,9 +124,10 @@
                         class="full-width" />
                     <label for="costo">Costo del servicio</label>
                 </span><br>
-                
+
                 <span class="p-float-label">
-                    <input class="native-date-picker" id="fechaServicio" name="fechaServicio" [(ngModel)]="saveServicioModel.fechaServicio" type="date" />
+                    <input class="native-date-picker" id="fechaServicio" name="fechaServicio"
+                        [(ngModel)]="saveServicioModel.fechaServicio" type="date" />
                     <!--<p-calendar id="fechaServicio" name="fechaServicio" [(ngModel)]="saveServicioModel.fechaServicio"
                         class="full-width" dateFormat="dd/mm/yy"></p-calendar>-->
                 </span><br>
@@ -129,14 +139,11 @@
                 </span><br>
 
                 <span class="p-float-label">
-                    <p-fileUpload 
-                        #fileUpload 
-                        name="myfile"
-                        url="/upload/url"
-                        accept=".pdf"
-                        mode="basic"
-                        chooseLabel="Choose PDF">
-                    </p-fileUpload>
+                    <div *ngIf="!modifyServicio">
+                        <p-fileUpload #fileUpload name="myfile" url="/upload/url" accept=".pdf" mode="basic"
+                            chooseLabel="Choose PDF">
+                        </p-fileUpload>
+                    </div>
                 </span><br>
 
                 <p-button label="Guardar" [outlined]="true" severity="secondary" class="right-aligned"

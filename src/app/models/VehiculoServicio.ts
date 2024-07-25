@@ -14,6 +14,7 @@ export class VehiculoServicio {
     folioFactura: string = "";
     costo: string = "";
     fechaServicio: Date | undefined;
+    fechaServicioString: string;
     formattedDate: string | undefined;
     descripcion: string = "";
     file: string = "";

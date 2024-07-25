@@ -26,6 +26,8 @@ export class ServiciosVehiculoComponent implements OnInit {
 
   private fileControllerUrl: string;
 
+  loading: boolean = false;
+
   //filtros
   filtro: Filtro = new Filtro;
   selectedServicio: Servicio = new Servicio;
@@ -48,6 +50,7 @@ export class ServiciosVehiculoComponent implements OnInit {
     { field: 'formattedDate', header: 'Fecha', type: 'string' }
   ];
   addServicioSidebarVisible: boolean = false;
+  modifyServicio: boolean = false;
   saveServicioModel: VehiculoServicio = new VehiculoServicio;
 
   @ViewChild('fileUpload') fileUpload: FileUpload;
@@ -69,31 +72,6 @@ export class ServiciosVehiculoComponent implements OnInit {
     this.getChoferes();
     this.getProveedores();
     this.getTiposServicio();
-  }
-
-
-  saveServicio(): void {
-    this.saveServicioModel.vehiculoIdVehiculo = this.saveServicioModel.vehiculoDTO.idVehiculo;
-    this.saveServicioModel.servicioIdServicio = this.saveServicioModel.servicioDTO.idServicio;
-    this.saveServicioModel.proveedorIdProveedor = this.saveServicioModel.proveedorDTO.idProveedor;
-
-    // Upload the file here
-    // Access the uploaded file
-    const uploadedFiles = this.fileUpload.files;
-    const file: File = uploadedFiles[0];
-    
-    this.vehiculoService.saveVehiculoServicio(file, this.saveServicioModel).subscribe(
-      (data: any) => {
-        // success
-        this.messageService.add({ severity: 'success', sticky: true, summary: 'Éxito', detail: 'Servicio guardado.' });
-        this.addServicioSidebarVisible = false;
-        this.saveServicioModel = new VehiculoServicio;
-        this.getVehiculosServicios(new Filtro);
-      },
-      (error: any) => {
-        this.messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: error.error.message });
-      }
-    )
   }
 
   public filtrar(borrarFiltros?: boolean): void {
@@ -148,12 +126,62 @@ export class ServiciosVehiculoComponent implements OnInit {
     link.click();
   }
 
+  editServicio(vehiculoServicio: VehiculoServicio): void {
+    // Realizar una copia profunda de vehiculoServicio
+    this.saveServicioModel = JSON.parse(JSON.stringify(vehiculoServicio));
+
+    //this.saveServicioModel.fechaServicioString = this.saveServicioModel.fechaServicio.toString().split('T')[0];
+
+    //const formattedDate = new Date(utility.formatFromStringToDate(vehiculoServicio.fechaServicio.toString().split('T')[0]));
+    //this.saveServicioModel.fechaServicio = formattedDate;
+    //console.log(this.saveServicioModel.fechaServicioString);
+
+    const foundVehiculo = this.vehiculos.find(vehiculo => vehiculo.numEconomico == vehiculoServicio.vehiculoDTO!.numEconomico);
+    this.saveServicioModel.vehiculoDTO = foundVehiculo;
+
+    this.modifyServicio = true;
+    this.addServicioSidebarVisible = true;
+  }
+
+  saveServicio(): void {
+    this.saveServicioModel.vehiculoIdVehiculo = this.saveServicioModel.vehiculoDTO.idVehiculo;
+    this.saveServicioModel.servicioIdServicio = this.saveServicioModel.servicioDTO.idServicio;
+    this.saveServicioModel.proveedorIdProveedor = this.saveServicioModel.proveedorDTO.idProveedor;
+
+    // Upload the file here
+    // Access the uploaded file
+    const uploadedFiles = this.modifyServicio ? null : this.fileUpload.files;
+    const file: File = this.modifyServicio ? null : uploadedFiles[0];
+    
+    this.vehiculoService.saveVehiculoServicio(file, this.saveServicioModel).subscribe(
+      (data: any) => {
+        // success
+        this.messageService.add({ severity: 'success', sticky: true, summary: 'Éxito', detail: 'Servicio guardado.' });
+        this.addServicioSidebarVisible = false;
+        this.saveServicioModel = new VehiculoServicio;
+        this.getVehiculosServicios(new Filtro);
+      },
+      (error: any) => {
+        this.messageService.add({ severity: 'error', sticky: true, summary: 'Error', detail: error.error.message });
+      }
+    )
+  }
+
+
+  openSidebar(): void {
+    this.addServicioSidebarVisible = true;
+    this.modifyServicio = false;
+  }
+
   private getVehiculosServicios(filtro: Filtro): void {
+    this.loading = true;
     this.servicioService.getVehiculosServicios(this.filtro).then(data => {
       data.forEach(element => {
         element.formattedDate = utility.formatFromStringToDateDescriptive(element.fechaServicio.toString().split('T')[0]);
       });
       this.servicios = data;
+    }).finally(() => {
+      this.loading = false;
     });
   }
 

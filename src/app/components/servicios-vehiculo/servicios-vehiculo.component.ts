@@ -177,7 +177,14 @@ export class ServiciosVehiculoComponent implements OnInit {
     this.loading = true;
     this.servicioService.getVehiculosServicios(this.filtro).then(data => {
       data.forEach(element => {
-        element.formattedDate = utility.formatFromStringToDateDescriptive(element.fechaServicio.toString().split('T')[0]);
+        try {
+          element.formattedDate = utility.formatFromStringToDateDescriptive(
+            element.fechaServicio.toString().split('T')[0]
+          );
+        } catch (error) {
+          console.error("Error al formatear la fecha:", error);
+          element.formattedDate = 'Fecha inválida'; // o deja el valor sin modificar
+        }
       });
       this.servicios = data;
     }).finally(() => {
